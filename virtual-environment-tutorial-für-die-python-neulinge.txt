@@ -1,0 +1,15 @@
+Wenn man in Python Pakete installiert (wie Django), macht man das nicht global sondern in einer virtual environment.
+Die hab ich schon eingerichtet. Um da rein zu kommen, geht ihr mit einer command line eurer Wahl ins Projekt und führt den hier aus:
+
+
+env\Scripts\activate
+
+
+Um danach alles zu installieren, führt ihr den hier aus:
+
+
+pip install -r requirements.txt 
+
+
+In requirements.txt sind einfach stur alle benötigten packages Zeile für zeile aufgeschrieben.
+Bevor hier irgendwas mit der command line im Projekt gemacht wird geht ihr vorher immer schön in die virtual environment, sonst gibt's Schläge
