@@ -13,7 +13,7 @@ def chessEncoder(x, y):
     return "ABCDEFGH"[x] + str(y+1)
 
 def chessDecoder(string):
-    return [ord(string[0]) - 65, int(string[1]) - 1]
+    return [ord(string[0].upper()) - 65, int(string[1]) - 1]
 
 class Figure:
     def __init__(self, pos_x, pos_y, owner, color, game):
@@ -34,19 +34,35 @@ class Pawn(Figure): #chess
 
     def move(self, new_x, new_y):
         # standard 1 nach vorne
+        target = self.game.board[new_y*8 + new_x]
         if self.color == "white":
-            if new_y == self.pos_y + 1 and new_x == self.pos_x and self.game.board[new_y*8 + new_x] == 0:
+            if new_y == self.pos_y + 1 and new_x == self.pos_x and target == 0:
                 return True
         else:
-            if new_y == self.pos_y - 1 and new_x == self.pos_x and self.game.board[new_y*8 + new_x] == 0:
+            if new_y == self.pos_y - 1 and new_x == self.pos_x and target == 0:
                 return True
             
-        # 2 nach vorne beim Start
+        # 2 nach vorne von der Startposition
         if self.color == "white" and self.pos_y == 1:
-            if new_y == self.pos_y + 2 and new_x == self.pos_x and self.game.board[new_y*8 + new_x] == 0:
+            if new_y == self.pos_y + 2 and new_x == self.pos_x and target == 0:
                 return True
             
+        elif self.pos_y == 6:
+            if new_y == self.pos_y - 2 and new_x == self.pos_x and target == 0:
+                return True
         
+        # diagionaler Angriff
+        if target != 0 and target.color != self.color:
+            if self.color == "white":
+                if new_y == self.pos_y + 1 and new_x == self.pos_x + 1 or new_x == self.pos_x - 1:
+                    return True
+            else:
+                if new_y == self.pos_y - 1 and new_x == self.pos_x + 1 or new_x == self.pos_x - 1:
+                    return True
+        
+        return False
+                
+
 
 class Knight(Figure): #chess
     def __init__(self, pos_x, pos_y, owner, color):
@@ -54,9 +70,10 @@ class Knight(Figure): #chess
 
 class Game: #chess
     def __init__(self, player1, player2):
-        self.player1 = player1
+        self.player1 = player1 # player 1 is white 
         self.player2 = player2
         self.board = self.initBoard()
+        self.turn = player1 # 1 means player1s turn, 2 means its player2s turn
 
     def printBoard(self):
         for i in range(8):
@@ -95,13 +112,39 @@ class Game: #chess
             print("There is no figure on the Position " + chessEncoder(prev_x, prev_y))
             return False
         else:
-            # Validate move through peace method
-            self.board[prev_y*8 + prev_x].move(new_x, new_y)
+            if self.board[prev_y*8 + prev_x].owner != self.turn:
+                print(bcolors.FAIL + "It is not your turn" + bcolors.ENDC)
+                return False
+            # Validate move through pieces move method
+            if self.board[prev_y*8 + prev_x].move(new_x, new_y):
+                # Valid Move
+                # KILL THE PIECE
+                if self.board[new_y*8 + new_x] != 0:
+                    self.board[new_y*8 + new_x] = 0
+
+                self.board[prev_y*8 + prev_x].updatePos(new_x, new_y)
+                self.board[new_y*8 + new_x] = self.board[prev_y*8 + prev_x]
+                self.board[prev_y*8 + prev_x] = 0
+
+                if self.turn == self.player1:
+                    self.turn = self.player2
+                else:
+                    self.turn = self.player1
+                return True
+
+            else:
+                print(bcolors.FAIL + "Move is illegal just like YOU" + bcolors.ENDC) # Debug Statements Sollten vor Abgabe raus
+                return False
+                
         
-g = Game(1,2)
+g = Game("Green","Red")
 running = True
+g.printBoard()
 while running:
-    g.printBoard()
+    if g.turn == g.player1:
+        print("It's " + bcolors.OKGREEN + str(g.turn) + bcolors.ENDC +"'s turn")
+    else:
+        print("It's " + bcolors.FAIL + str(g.turn) + bcolors.ENDC +"'s turn")
     print("Enter a move like \"A2 to A3\": ")
     move = input()
     if move == "exit" or move == "quit" or move == "q":
@@ -109,4 +152,9 @@ while running:
     pos = move[0:2]
     to = move[-2:]
     print(str(pos) + " to " + str(to))
-    g.move(chessDecoder(pos)[0], chessDecoder(pos)[1], chessDecoder(to)[0], chessDecoder(to)[1])
+    from_x = chessDecoder(pos)[0]
+    from_y = chessDecoder(pos)[1]
+    to_x = chessDecoder(to)[0]
+    to_y = chessDecoder(to)[1]
+    g.move(from_x, from_y, to_x, to_y)
+    g.printBoard()
