@@ -27,7 +27,7 @@ class Figure:
         self.pos_x = x
         self.pos_y = y
 
-class Pawn(Figure): #chess
+class Pawn(Figure):
     def __init__(self, pos_x, pos_y, owner, color, game):
         super().__init__(pos_x, pos_y, owner, color, game)
         self.name = 'P'
@@ -61,14 +61,50 @@ class Pawn(Figure): #chess
                     return True
         
         return False
-                
 
+class Knight(Figure):
+    def __init__(self, pos_x, pos_y, owner, color, game):
+        super().__init__(pos_x, pos_y, owner, color, game)
+        self.name = 'N'
 
-class Knight(Figure): #chess
-    def __init__(self, pos_x, pos_y, owner, color):
-        super().__init__(pos_x, pos_y, owner, color)
+    def move(self, new_x, new_y):
+        if abs(self.pos_x - new_x) == 2 and abs(self.pos_y - new_y) == 1:
+            return True
+        if abs(self.pos_x - new_x) == 1 and abs(self.pos_y - new_y) == 2:
+            return True
+        
+        return False
+    
+class Bishop(Figure): 
+    def __init__(self, pos_x, pos_y, owner, color, game):
+        super().__init__(pos_x, pos_y, owner, color, game)
+        self.name = 'B'
 
-class Game: #chess
+    def move(self, new_x, new_y):
+        if abs(self.pos_x - new_x) == abs(self.pos_y - new_y):
+            if self.pos_x < new_x:
+                x_move_dir = 1
+            else:            
+                x_move_dir = -1
+            if self.pos_y < new_y:
+                y_move_dir = 1
+            else:
+                y_move_dir = -1
+
+            # check if there is shit in the way
+            if abs(self.pos_x - new_x) > 1:
+                for i in range(1,abs(self.pos_x - new_x)):
+                    if self.game.board[(self.pos_y + i*y_move_dir)*8 + (self.pos_x + i*x_move_dir)] != 0:
+                        return False
+
+            if self.game.board[new_y*8 + new_x] != 0:
+                if self.game.board[new_y*8 + new_x].color == self.color:
+                    return False
+            
+            return True
+        return False
+
+class Game:
     def __init__(self, player1, player2):
         self.player1 = player1 # player 1 is white 
         self.player2 = player2
@@ -97,13 +133,29 @@ class Game: #chess
         for i in range(8):
             board[8 + i] = Pawn(i, 1, self.player1, "white", self)
             board[6*8 + i] = Pawn(i, 6, self.player2, "black", self)
+
+        # spawn in the knights
+        board[1] = Knight(1, 0, self.player1, "white", self)
+        board[6] = Knight(6, 0, self.player1, "white", self)
+
+        board[7*8 + 1] = Knight(1, 7, self.player2, "black", self)
+        board[7*8 +6] = Knight(6, 7, self.player2, "black", self)
+
+        # spawn in the bishops
+        board[2] = Bishop(2, 0, self.player1, "white", self)
+        board[5] = Bishop(5, 0, self.player1, "white", self)
+
+        board[7*8 + 2] = Bishop(2, 7, self.player2, "black", self)
+        board[7*8 + 5] = Bishop(5, 7, self.player2, "black", self)
+
+        
         return board
 
     def move(self, prev_x, prev_y, new_x, new_y):
+
         if prev_x < 0 or prev_x > 7 or prev_y < 0 or prev_y > 7:
             print("Position is out of bounds")
             return False
-
         if new_x < 0 or new_x > 7 or new_y < 0 or new_y > 7:
             print("Move is out of bounds")
             return False
@@ -111,6 +163,11 @@ class Game: #chess
         if self.board[prev_y*8 + prev_x] == 0:
             print("There is no figure on the Position " + chessEncoder(prev_x, prev_y))
             return False
+        
+        if prev_x == new_x and prev_y == new_y:
+            print("You can't stay in the same position")
+            return False
+
         else:
             if self.board[prev_y*8 + prev_x].owner != self.turn:
                 print(bcolors.FAIL + "It is not your turn" + bcolors.ENDC)
@@ -149,6 +206,12 @@ while running:
     move = input()
     if move == "exit" or move == "quit" or move == "q":
         break
+    if move == "s":
+        if g.turn == g.player1:
+            g.turn = g.player2
+        else:
+            g.turn = g.player1
+        continue
     pos = move[0:2]
     to = move[-2:]
     print(str(pos) + " to " + str(to))
