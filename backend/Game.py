@@ -103,6 +103,46 @@ class Bishop(Figure):
             
             return True
         return False
+    
+
+class Rook(Figure): 
+    def __init__(self, pos_x, pos_y, owner, color, game):
+        super().__init__(pos_x, pos_y, owner, color, game)
+        self.name = 'R'
+
+    def move(self, new_x, new_y):
+        if (new_x != 0 and new_y != 0):
+            return False
+        
+        # horizontal movement
+        if (new_x != 0):
+            if self.pos_x < new_x:
+                x_move_dir = 1
+            else:            
+                x_move_dir = -1
+
+            # check if there is shit in the way
+            if abs(self.pos_x - new_x) > 1:
+                for i in range(1,abs(self.pos_x - new_x)):
+                    if self.game.board[(self.pos_x + i*x_move_dir)] != 0:
+                        return False
+                    
+            return True
+
+        # vertical movement
+        if (new_y != 0):
+            if self.pos_y < new_y:
+                y_move_dir = 1
+            else:            
+                y_move_dir = -1
+
+            if abs(self.pos_y - new_y) > 1:
+                for i in range(1,abs(self.pos_y - new_y)):
+                    if self.game.board[(self.pos_y* 8 + self.pos_x + i*y_move_dir)  ] != 0:
+                        return False
+            
+            return True
+        return False
 
 class Game:
     def __init__(self, player1, player2):
@@ -130,9 +170,9 @@ class Game:
     def initBoard(self):
         board = [0]*64
         # spawn in the pawns
-        for i in range(8):
-            board[8 + i] = Pawn(i, 1, self.player1, "white", self)
-            board[6*8 + i] = Pawn(i, 6, self.player2, "black", self)
+        # for i in range(8):
+        #     board[8 + i] = Pawn(i, 1, self.player1, "white", self)
+        #     board[6*8 + i] = Pawn(i, 6, self.player2, "black", self)
 
         # spawn in the knights
         board[1] = Knight(1, 0, self.player1, "white", self)
@@ -147,6 +187,13 @@ class Game:
 
         board[7*8 + 2] = Bishop(2, 7, self.player2, "black", self)
         board[7*8 + 5] = Bishop(5, 7, self.player2, "black", self)
+
+        # spawn in the rooks
+        board[0] = Rook(0, 0, self.player1, "white", self)
+        board[7] = Rook(7, 0, self.player1, "white", self)
+
+        board[7*8 + 0] = Rook(0, 7, self.player2, "black", self)
+        board[7*8 + 7] = Rook(7, 7, self.player2, "black", self)
 
         
         return board
