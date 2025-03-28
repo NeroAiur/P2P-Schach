@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 class bcolors:
     HEADER = '\033[95m'
     OKBLUE = '\033[94m'
@@ -34,7 +36,7 @@ class Pawn(Figure):
 
     def move(self, new_x, new_y):
         # standard 1 nach vorne
-        target = self.game.board[new_y*8 + new_x]
+        target = self.game.getBoard(new_x, new_y)
         if self.color == "white":
             if new_y == self.pos_y + 1 and new_x == self.pos_x and target == 0:
                 return True
@@ -68,10 +70,11 @@ class Knight(Figure):
         self.name = 'N'
 
     def move(self, new_x, new_y):
-        if abs(self.pos_x - new_x) == 2 and abs(self.pos_y - new_y) == 1:
-            return True
-        if abs(self.pos_x - new_x) == 1 and abs(self.pos_y - new_y) == 2:
-            return True
+        if self.game.getBoard(new_x, new_y) == 0 or self.game.getBoard(new_x, new_y).color != self.color: # checken das keine Mate auf dem Feld steht
+            if abs(self.pos_x - new_x) == 2 and abs(self.pos_y - new_y) == 1:
+                return True
+            if abs(self.pos_x - new_x) == 1 and abs(self.pos_y - new_y) == 2:
+                return True
         
         return False
     
@@ -94,11 +97,12 @@ class Bishop(Figure):
             # check if there is shit in the way
             if abs(self.pos_x - new_x) > 1:
                 for i in range(1,abs(self.pos_x - new_x)):
-                    if self.game.board[(self.pos_y + i*y_move_dir)*8 + (self.pos_x + i*x_move_dir)] != 0:
+                    if self.game.getBoard((self.pos_x + i*x_move_dir), (self.pos_y + i*y_move_dir)) != 0:
                         return False
 
-            if self.game.board[new_y*8 + new_x] != 0:
-                if self.game.board[new_y*8 + new_x].color == self.color:
+            # check for friendly fire
+            if self.game.getBoard(new_x, new_y) != 0:
+                if self.game.getBoard(new_x, new_y).color == self.color:
                     return False
             
             return True
@@ -111,38 +115,38 @@ class Rook(Figure):
         self.name = 'R'
 
     def move(self, new_x, new_y):
-        if (new_x != 0 and new_y != 0):
+        if (abs(new_x - self.pos_x) != 0 and abs(new_y - self.pos_y) != 0):
             return False
         
         # horizontal movement
-        if (new_x != 0):
+        if (abs(self.pos_x - new_x) != 0):
             if self.pos_x < new_x:
                 x_move_dir = 1
             else:            
                 x_move_dir = -1
 
             # check if there is shit in the way
-            if abs(self.pos_x - new_x) > 1:
-                for i in range(1,abs(self.pos_x - new_x)):
-                    if self.game.board[(self.pos_x + i*x_move_dir)] != 0:
-                        return False
-                    
-            return True
+            for i in range(1,abs(self.pos_x - new_x)):
+                if self.game.getBoard((self.pos_x + i*x_move_dir), self.pos_y) != 0:
+                    return False
 
         # vertical movement
-        if (new_y != 0):
+        else:
             if self.pos_y < new_y:
                 y_move_dir = 1
             else:            
                 y_move_dir = -1
 
-            if abs(self.pos_y - new_y) > 1:
-                for i in range(1,abs(self.pos_y - new_y)):
-                    if self.game.board[(self.pos_y* 8 + self.pos_x + i*y_move_dir)  ] != 0:
-                        return False
+            for i in range(1,abs(self.pos_y - new_y)):
+                if self.game.getBoard(self.pos_x, (self.pos_y + i*y_move_dir)) != 0:
+                    return False
             
-            return True
-        return False
+        # friendly fire check
+        if self.game.getBoard(new_x, new_y) != 0:
+            if self.game.getBoard(new_x, new_y).color == self.color:
+                return False
+            
+        return True
 
 class Game:
     def __init__(self, player1, player2):
@@ -155,10 +159,10 @@ class Game:
         for i in range(8):
             print (str(i+1) + " |", end=' ')
             for j in range(8):
-                if self.board[i*8+j] == 0:
-                    print(self.board[i*8+j], end=' ')
+                if self.getBoard(j, i) == 0:
+                    print("0", end=' ')
                 else:
-                    if self.board[i*8+j].color == "white":
+                    if self.getBoard(j, i).color == "white":
                         print(bcolors.OKGREEN + self.board[i*8+j].name + bcolors.ENDC, end=' ')
                     else:
                         print(bcolors.FAIL + self.board[i*8+j].name + bcolors.ENDC, end=' ')
@@ -167,12 +171,18 @@ class Game:
         print("    ---------------")
         print("    A B C D E F G H")
 
+    def setBoard(self, x, y, content):
+        self.board[y*8 + x] = content
+
+    def getBoard(self, x, y):
+        return self.board[y*8 + x]
+
     def initBoard(self):
         board = [0]*64
         # spawn in the pawns
-        # for i in range(8):
-        #     board[8 + i] = Pawn(i, 1, self.player1, "white", self)
-        #     board[6*8 + i] = Pawn(i, 6, self.player2, "black", self)
+        for i in range(8):
+            board[8 + i] = Pawn(i, 1, self.player1, "white", self)
+            board[6*8 + i] = Pawn(i, 6, self.player2, "black", self)
 
         # spawn in the knights
         board[1] = Knight(1, 0, self.player1, "white", self)
@@ -216,19 +226,19 @@ class Game:
             return False
 
         else:
-            if self.board[prev_y*8 + prev_x].owner != self.turn:
+            if self.getBoard(prev_x, prev_y).owner != self.turn:
                 print(bcolors.FAIL + "It is not your turn" + bcolors.ENDC)
                 return False
             # Validate move through pieces move method
-            if self.board[prev_y*8 + prev_x].move(new_x, new_y):
+            if self.getBoard(prev_x, prev_y).move(new_x, new_y):
                 # Valid Move
                 # KILL THE PIECE
-                if self.board[new_y*8 + new_x] != 0:
-                    self.board[new_y*8 + new_x] = 0
+                if self.getBoard(new_x, new_y) != 0:
+                    self.setBoard(new_x, new_y, 0)
 
-                self.board[prev_y*8 + prev_x].updatePos(new_x, new_y)
-                self.board[new_y*8 + new_x] = self.board[prev_y*8 + prev_x]
-                self.board[prev_y*8 + prev_x] = 0
+                self.getBoard(prev_x, prev_y).updatePos(new_x, new_y)
+                self.setBoard(new_x, new_y, self.getBoard(prev_x, prev_y))
+                self.setBoard(prev_x, prev_y, 0)
 
                 if self.turn == self.player1:
                     self.turn = self.player2
@@ -249,7 +259,7 @@ while running:
         print("It's " + bcolors.OKGREEN + str(g.turn) + bcolors.ENDC +"'s turn")
     else:
         print("It's " + bcolors.FAIL + str(g.turn) + bcolors.ENDC +"'s turn")
-    print("Enter a move like \"A2 to A3\": ")
+    print("Enter a move like \"A2 to A3\" or \"c7 c6\" or quit with 'q': ")
     move = input()
     if move == "exit" or move == "quit" or move == "q":
         break
