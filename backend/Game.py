@@ -18,7 +18,7 @@ def chessDecoder(string):
     return [ord(string[0].upper()) - 65, int(string[1]) - 1]
 
 class Figure:
-    def __init__(self, pos_x, pos_y, owner, color, game):
+    def __init__(self, pos_x, pos_y, owner, color, game: Game):
         self.pos_x = pos_x
         self.pos_y = pos_y
         self.owner = owner
@@ -30,7 +30,7 @@ class Figure:
         self.pos_y = y
 
 class Pawn(Figure):
-    def __init__(self, pos_x, pos_y, owner, color, game):
+    def __init__(self, pos_x, pos_y, owner, color, game: Game):
         super().__init__(pos_x, pos_y, owner, color, game)
         self.name = 'P'
 
@@ -65,7 +65,7 @@ class Pawn(Figure):
         return False
 
 class Knight(Figure):
-    def __init__(self, pos_x, pos_y, owner, color, game):
+    def __init__(self, pos_x, pos_y, owner, color, game: Game):
         super().__init__(pos_x, pos_y, owner, color, game)
         self.name = 'N'
 
@@ -79,7 +79,7 @@ class Knight(Figure):
         return False
     
 class Bishop(Figure): 
-    def __init__(self, pos_x, pos_y, owner, color, game):
+    def __init__(self, pos_x, pos_y, owner, color, game: Game):
         super().__init__(pos_x, pos_y, owner, color, game)
         self.name = 'B'
 
@@ -110,7 +110,7 @@ class Bishop(Figure):
     
 
 class Rook(Figure): 
-    def __init__(self, pos_x, pos_y, owner, color, game):
+    def __init__(self, pos_x, pos_y, owner, color, game: Game):
         super().__init__(pos_x, pos_y, owner, color, game)
         self.name = 'R'
 
