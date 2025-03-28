@@ -1,3 +1,5 @@
+# DAS IST EIN TESTFILE, DAS HAT NICHTS MIT SCHACH ZU TUNs
+
 two_d_array = [[0 for x in range(8)] for y in range(8)]
 
 two_d_array[5][5] = 25
