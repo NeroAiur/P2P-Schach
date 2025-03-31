@@ -58,15 +58,15 @@ class Figure:
     def bruteForceGenerateAllMoves(self):
         moves = []
 
-        if self.name != 'P':
-            for x in range(8):
-                for y in range(8):
-                    if self.validateMove(x, y):
-                        moves.append(Move(self, self.pos_x, self.pos_y, x, y))
-            return moves
+        #if self.name != 'P':
+        for x in range(8):
+            for y in range(8):
+                if self.validateMove(x, y):
+                    moves.append(Move(self, self.pos_x, self.pos_y, x, y))
+        return moves
         
-        else:
-            return self.returnAllMoves()
+        #else:
+        #    return self.returnAllMoves()
     
 
 class Pawn(Figure):
@@ -127,10 +127,10 @@ class Pawn(Figure):
         # diagionaler Angriff
         if target != 0 and target.color != self.color:
             if self.color == "white":
-                if new_y == self.pos_y + 1 and new_x == self.pos_x + 1 or new_x == self.pos_x - 1:
+                if new_y == self.pos_y + 1 and (new_x == self.pos_x + 1 or new_x == self.pos_x - 1):
                     return True
             else:
-                if new_y == self.pos_y - 1 and new_x == self.pos_x + 1 or new_x == self.pos_x - 1:
+                if new_y == self.pos_y - 1 and (new_x == self.pos_x + 1 or new_x == self.pos_x - 1):
                     return True
         
         return False
@@ -330,10 +330,10 @@ class Game:
 
     def initBoard(self):
         board = [0]*64
-        # # spawn in the pawns
-        # for i in range(8):
-        #     board[8 + i] = Pawn(i, 1, self.player1, "white", self)
-        #     board[6*8 + i] = Pawn(i, 6, self.player2, "black", self)
+        # spawn in the pawns
+        for i in range(8):
+            board[8 + i] = Pawn(i, 1, self.player1, "white", self)
+            board[6*8 + i] = Pawn(i, 6, self.player2, "black", self)
 
         # spawn in the knights
         board[1] = Knight(1, 0, self.player1, "white", self)
@@ -535,54 +535,54 @@ while running:
         if figure.validateMove(g.turn.king.pos_x, g.turn.king.pos_y):
             g.turn.inCheck = True
 
-    print("Your King is at " +chessEncoder(g.turn.king.pos_x, g.turn.king.pos_y))
+    # print("Your King is at " +chessEncoder(g.turn.king.pos_x, g.turn.king.pos_y))
 
     g.generateAllMoves(g.turn)
 
     #print all moves
-    print("Possible moves: ")
-    print("Pawns:  ", end=' ')
-    for move in g.turn.moves:
-        if move.piece.name == 'P':
-            print(chessEncoder(move.from_x, move.from_y) + " to " + chessEncoder(move.to_x, move.to_y) + ",", end=' ')
-    print()
+    # print("Possible moves: ")
+    # print("Pawns:  ", end=' ')
+    # for move in g.turn.moves:
+    #     if move.piece.name == 'P':
+    #         print(chessEncoder(move.from_x, move.from_y) + " to " + chessEncoder(move.to_x, move.to_y) + ",", end=' ')
+    # print()
 
-    print("Knights:", end=' ')
-    for move in g.turn.moves:
-        if move.piece.name == 'N':
-            print(chessEncoder(move.from_x, move.from_y) + " to " + chessEncoder(move.to_x, move.to_y) + ",", end=' ')
-    print()
+    # print("Knights:", end=' ')
+    # for move in g.turn.moves:
+    #     if move.piece.name == 'N':
+    #         print(chessEncoder(move.from_x, move.from_y) + " to " + chessEncoder(move.to_x, move.to_y) + ",", end=' ')
+    # print()
 
-    print("Bishops:", end=' ')
-    for move in g.turn.moves:
-        if move.piece.name == 'B':
-            print(chessEncoder(move.from_x, move.from_y) + " to " + chessEncoder(move.to_x, move.to_y) + ",", end=' ')
-    print()
+    # print("Bishops:", end=' ')
+    # for move in g.turn.moves:
+    #     if move.piece.name == 'B':
+    #         print(chessEncoder(move.from_x, move.from_y) + " to " + chessEncoder(move.to_x, move.to_y) + ",", end=' ')
+    # print()
 
-    print("Rooks:  ", end=' ')
-    for move in g.turn.moves:
-        if move.piece.name == 'R':
-            print(chessEncoder(move.from_x, move.from_y) + " to " + chessEncoder(move.to_x, move.to_y) + ",", end=' ')
-    print()
+    # print("Rooks:  ", end=' ')
+    # for move in g.turn.moves:
+    #     if move.piece.name == 'R':
+    #         print(chessEncoder(move.from_x, move.from_y) + " to " + chessEncoder(move.to_x, move.to_y) + ",", end=' ')
+    # print()
 
-    print("Queen:  ", end=' ')
-    for move in g.turn.moves:
-        if move.piece.name == 'Q':
-            print(chessEncoder(move.from_x, move.from_y) + " to " + chessEncoder(move.to_x, move.to_y) + ",", end=' ')
-    print()
+    # print("Queen:  ", end=' ')
+    # for move in g.turn.moves:
+    #     if move.piece.name == 'Q':
+    #         print(chessEncoder(move.from_x, move.from_y) + " to " + chessEncoder(move.to_x, move.to_y) + ",", end=' ')
+    # print()
 
-    print("King:   ", end=' ')
-    for move in g.turn.moves:
-        if move.piece.name == 'K':
-            print(chessEncoder(move.from_x, move.from_y) + " to " + chessEncoder(move.to_x, move.to_y) + ",", end=' ')
-    print()
+    # print("King:   ", end=' ')
+    # for move in g.turn.moves:
+    #     if move.piece.name == 'K':
+    #         print(chessEncoder(move.from_x, move.from_y) + " to " + chessEncoder(move.to_x, move.to_y) + ",", end=' ')
+    # print()
 
     # GameOver Check
     if len(g.turn.moves) == 0:
         if g.turn.inCheck:
             print(bcolors.FAIL + "CHECKMATE" + bcolors.ENDC)
             if g.turn == g.player1:
-                print(bcolors.OKGREEN + player2.name + " wins" + bcolors.ENDC)
+                print(bcolors.FAIL + player2.name + " wins" + bcolors.ENDC)
             else:
                 print(bcolors.OKGREEN + player1.name + " wins" + bcolors.ENDC)
         else:
