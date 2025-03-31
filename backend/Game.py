@@ -227,6 +227,9 @@ class Queen(Figure):
         return self.rookMovement(new_x, new_y) or self.bishopMovement(new_x, new_y)
     
     def rookMovement(self, new_x, new_y):
+        if new_x == 4 and new_y == 1: 
+            1+1
+
         if (abs(new_x - self.pos_x) != 0 and abs(new_y - self.pos_y) != 0):
             return False
         
@@ -444,8 +447,8 @@ class Game:
 
         # Wenn der König bewegt wird oder derzeit im Schach steht muss eine genereller Check prüfung erfolgen
         for move in player.moves:
-                    if self.simulate_move(move, player):
-                        to_remove.append(move)
+            if self.simulate_move(move, player):
+                to_remove.append(move)
 
         # move move move
         for move in to_remove:
@@ -456,6 +459,8 @@ class Game:
                 
 
     def simulate_move(self, move: Move, player: Player):
+        if move.piece.name == 'K' and move.to_x == 4 and move.to_y == 1:
+            1+1
         test_board = list(self.board)       
         test_board[move.from_y*8 + move.from_x] = 0
         test_board[move.to_y*8 + move.to_x] = move.piece
@@ -469,7 +474,9 @@ class Game:
         copy_of_game = deepcopy(self)
         copy_of_game.board = test_board
 
-        enemy_player = copy_of_game.player2 if player == copy_of_game.player1 else copy_of_game.player1
+        enemy_player = self.player2
+        if player2.color == player.color:
+            enemy_player = self.player1
 
         for figure in enemy_player.figures:
             figure.game = copy_of_game
@@ -512,6 +519,8 @@ player2 = Player("Player 2", "black")
 g = Game(player1, player2)
 running = True
 g.printBoard()
+player1.moves = g.generateAllMoves(player1)
+player2.moves = g.generateAllMoves(player2)
 while running:
     if g.turn == g.player1:
         print("It's " + bcolors.OKGREEN + str(g.turn.name) + bcolors.ENDC +"'s turn")
