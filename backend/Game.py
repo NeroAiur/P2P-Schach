@@ -462,8 +462,6 @@ class Game:
         if move.piece.name == 'K' and move.to_x == 4 and move.to_y == 1:
             1+1
         test_board = list(self.board)       
-        test_board[move.from_y*8 + move.from_x] = 0
-        test_board[move.to_y*8 + move.to_x] = move.piece
 
         # Falls der König sich bewegt
         prev_king_pos_x = player.king.pos_x
@@ -474,9 +472,16 @@ class Game:
         copy_of_game = deepcopy(self)
         copy_of_game.board = test_board
 
-        enemy_player = self.player2
-        if player2.color == player.color:
-            enemy_player = self.player1
+        enemy_player = copy_of_game.player2
+        if copy_of_game.player2.color == player.color:
+            enemy_player = copy_of_game.player1
+
+        # wenn ein gegner dort ist, vernichte ihn
+        if copy_of_game.getBoard(move.to_x, move.to_y) != 0:
+            enemy_player.figures.remove(copy_of_game.getBoard(move.to_x, move.to_y))
+            
+        copy_of_game.setBoard(move.to_x, move.to_y, move.piece)
+        copy_of_game.setBoard(move.from_x, move.from_y, 0)
 
         for figure in enemy_player.figures:
             figure.game = copy_of_game
@@ -540,42 +545,42 @@ while running:
     g.generateAllMoves(g.turn)
 
     #print all moves
-    # print("Possible moves: ")
-    # print("Pawns:  ", end=' ')
-    # for move in g.turn.moves:
-    #     if move.piece.name == 'P':
-    #         print(chessEncoder(move.from_x, move.from_y) + " to " + chessEncoder(move.to_x, move.to_y) + ",", end=' ')
-    # print()
+    print("Possible moves: ")
+    print("Pawns:  ", end=' ')
+    for move in g.turn.moves:
+        if move.piece.name == 'P':
+            print(chessEncoder(move.from_x, move.from_y) + " to " + chessEncoder(move.to_x, move.to_y) + ",", end=' ')
+    print()
 
-    # print("Knights:", end=' ')
-    # for move in g.turn.moves:
-    #     if move.piece.name == 'N':
-    #         print(chessEncoder(move.from_x, move.from_y) + " to " + chessEncoder(move.to_x, move.to_y) + ",", end=' ')
-    # print()
+    print("Knights:", end=' ')
+    for move in g.turn.moves:
+        if move.piece.name == 'N':
+            print(chessEncoder(move.from_x, move.from_y) + " to " + chessEncoder(move.to_x, move.to_y) + ",", end=' ')
+    print()
 
-    # print("Bishops:", end=' ')
-    # for move in g.turn.moves:
-    #     if move.piece.name == 'B':
-    #         print(chessEncoder(move.from_x, move.from_y) + " to " + chessEncoder(move.to_x, move.to_y) + ",", end=' ')
-    # print()
+    print("Bishops:", end=' ')
+    for move in g.turn.moves:
+        if move.piece.name == 'B':
+            print(chessEncoder(move.from_x, move.from_y) + " to " + chessEncoder(move.to_x, move.to_y) + ",", end=' ')
+    print()
 
-    # print("Rooks:  ", end=' ')
-    # for move in g.turn.moves:
-    #     if move.piece.name == 'R':
-    #         print(chessEncoder(move.from_x, move.from_y) + " to " + chessEncoder(move.to_x, move.to_y) + ",", end=' ')
-    # print()
+    print("Rooks:  ", end=' ')
+    for move in g.turn.moves:
+        if move.piece.name == 'R':
+            print(chessEncoder(move.from_x, move.from_y) + " to " + chessEncoder(move.to_x, move.to_y) + ",", end=' ')
+    print()
 
-    # print("Queen:  ", end=' ')
-    # for move in g.turn.moves:
-    #     if move.piece.name == 'Q':
-    #         print(chessEncoder(move.from_x, move.from_y) + " to " + chessEncoder(move.to_x, move.to_y) + ",", end=' ')
-    # print()
+    print("Queen:  ", end=' ')
+    for move in g.turn.moves:
+        if move.piece.name == 'Q':
+            print(chessEncoder(move.from_x, move.from_y) + " to " + chessEncoder(move.to_x, move.to_y) + ",", end=' ')
+    print()
 
-    # print("King:   ", end=' ')
-    # for move in g.turn.moves:
-    #     if move.piece.name == 'K':
-    #         print(chessEncoder(move.from_x, move.from_y) + " to " + chessEncoder(move.to_x, move.to_y) + ",", end=' ')
-    # print()
+    print("King:   ", end=' ')
+    for move in g.turn.moves:
+        if move.piece.name == 'K':
+            print(chessEncoder(move.from_x, move.from_y) + " to " + chessEncoder(move.to_x, move.to_y) + ",", end=' ')
+    print()
 
     # GameOver Check
     if len(g.turn.moves) == 0:
