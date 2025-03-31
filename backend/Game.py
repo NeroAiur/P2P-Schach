@@ -458,11 +458,7 @@ class Game:
         player.moves = list(set(player.moves))
                 
 
-    def simulate_move(self, move: Move, player: Player):
-        if move.piece.name == 'K' and move.to_x == 4 and move.to_y == 1:
-            1+1
-        test_board = list(self.board)       
-
+    def simulate_move(self, move: Move, player: Player):  
         # Falls der König sich bewegt
         prev_king_pos_x = player.king.pos_x
         prev_king_pos_y = player.king.pos_y
@@ -470,7 +466,6 @@ class Game:
             player.king.updatePos(move.to_x, move.to_y)
         
         copy_of_game = deepcopy(self)
-        copy_of_game.board = test_board
 
         enemy_player = copy_of_game.player2
         if copy_of_game.player2.color == player.color:
