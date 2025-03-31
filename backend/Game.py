@@ -433,19 +433,17 @@ class Game:
         enemy_player = self.player2 if player == self.player1 else self.player1
         to_remove = []
 
-        # Gehe durch alle gegnerischen Moves, filtere die Heraus die die aktuelle Figur angreifen
-        # und nach deren Bewegung den König gefährden könnten (Dame, Läufer, Turm)
-        for enemy_move in enemy_player.moves:
-            for move in player.moves:
-                if enemy_move.to_x == move.from_x and enemy_move.to_y == move.from_y:
-                    if move.from_x != enemy_move.from_x or move.from_y != enemy_move.from_y: # wenn die Figur dusch diesen Move erledigt wird muss nichts überprüft werden
-                            if self.move_causes_check(move, player, enemy_move.piece):       # Sollte wahrscheinlich auch nur auf Dame, Läufer, Turm beschränkt werden, gugge erstma
-                                to_remove.append(move)
+        # # Gehe durch alle gegnerischen Moves, filtere die Heraus die die aktuelle Figur angreifen
+        # # und nach deren Bewegung den König gefährden könnten (Dame, Läufer, Turm)
+        # for enemy_move in enemy_player.moves:
+        #     for move in player.moves:
+        #         if enemy_move.to_x == move.from_x and enemy_move.to_y == move.from_y:
+        #             if move.to_x != enemy_move.from_x or move.to_y != enemy_move.from_y: # wenn die Figur dusch diesen Move erledigt wird muss nichts überprüft werden
+        #                     if self.move_causes_check(move, player, enemy_move.piece):       # Sollte wahrscheinlich auch nur auf Dame, Läufer, Turm beschränkt werden, gugge erstma
+        #                         to_remove.append(move)
 
-        1+1
         # Wenn der König bewegt wird oder derzeit im Schach steht muss eine genereller Check prüfung erfolgen
         for move in player.moves:
-            if move.piece.name == 'K' or player.inCheck:
                     if self.simulate_move(move, player):
                         to_remove.append(move)
 
@@ -461,6 +459,12 @@ class Game:
         test_board = list(self.board)       
         test_board[move.from_y*8 + move.from_x] = 0
         test_board[move.to_y*8 + move.to_x] = move.piece
+
+        # Falls der König sich bewegt
+        prev_king_pos_x = player.king.pos_x
+        prev_king_pos_y = player.king.pos_y
+        if move.piece.name == 'K':
+            player.king.updatePos(move.to_x, move.to_y)
         
         copy_of_game = deepcopy(self)
         copy_of_game.board = test_board
@@ -470,10 +474,12 @@ class Game:
         for figure in enemy_player.figures:
             figure.game = copy_of_game
             if figure.validateMove(player.king.pos_x, player.king.pos_y):
+                player.king.updatePos(prev_king_pos_x, prev_king_pos_y)
                 figure.game = self
                 return True
             figure.game = self
 
+        player.king.updatePos(prev_king_pos_x, prev_king_pos_y)
         return False
 
 
