@@ -327,10 +327,10 @@ class Game:
 
     def initBoard(self):
         board = [0]*64
-        # spawn in the pawns
-        for i in range(8):
-            board[8 + i] = Pawn(i, 1, self.player1, "white", self)
-            board[6*8 + i] = Pawn(i, 6, self.player2, "black", self)
+        # # spawn in the pawns
+        # for i in range(8):
+        #     board[8 + i] = Pawn(i, 1, self.player1, "white", self)
+        #     board[6*8 + i] = Pawn(i, 6, self.player2, "black", self)
 
         # spawn in the knights
         board[1] = Knight(1, 0, self.player1, "white", self)
@@ -433,19 +433,17 @@ class Game:
         enemy_player = self.player2 if player == self.player1 else self.player1
         to_remove = []
 
-        # Gehe durch alle gegnerischen Moves, filtere die Heraus die die aktuelle Figur angreifen
-        # und nach deren Bewegung den König gefährden könnten (Dame, Läufer, Turm)
-        for enemy_move in enemy_player.moves:
-            for move in player.moves:
-                if enemy_move.to_x == move.from_x and enemy_move.to_y == move.from_y:
-                    if move.from_x != enemy_move.from_x or move.from_y != enemy_move.from_y: # wenn die Figur dusch diesen Move erledigt wird muss nichts überprüft werden
-                            if self.move_causes_check(move, player, enemy_move.piece):       # Sollte wahrscheinlich auch nur auf Dame, Läufer, Turm beschränkt werden, gugge erstma
-                                to_remove.append(move)
+        # # Gehe durch alle gegnerischen Moves, filtere die Heraus die die aktuelle Figur angreifen
+        # # und nach deren Bewegung den König gefährden könnten (Dame, Läufer, Turm)
+        # for enemy_move in enemy_player.moves:
+        #     for move in player.moves:
+        #         if enemy_move.to_x == move.from_x and enemy_move.to_y == move.from_y:
+        #             if move.to_x != enemy_move.from_x or move.to_y != enemy_move.from_y: # wenn die Figur dusch diesen Move erledigt wird muss nichts überprüft werden
+        #                     if self.move_causes_check(move, player, enemy_move.piece):       # Sollte wahrscheinlich auch nur auf Dame, Läufer, Turm beschränkt werden, gugge erstma
+        #                         to_remove.append(move)
 
         # Wenn der König bewegt wird oder derzeit im Schach steht muss eine genereller Check prüfung erfolgen
         for move in player.moves:
-            if move.piece.name == 'K' or player.inCheck:
-                for move in player.moves:
                     if self.simulate_move(move, player):
                         to_remove.append(move)
 
@@ -461,6 +459,12 @@ class Game:
         test_board = list(self.board)       
         test_board[move.from_y*8 + move.from_x] = 0
         test_board[move.to_y*8 + move.to_x] = move.piece
+
+        # Falls der König sich bewegt
+        prev_king_pos_x = player.king.pos_x
+        prev_king_pos_y = player.king.pos_y
+        if move.piece.name == 'K':
+            player.king.updatePos(move.to_x, move.to_y)
         
         copy_of_game = deepcopy(self)
         copy_of_game.board = test_board
@@ -470,9 +474,13 @@ class Game:
         for figure in enemy_player.figures:
             figure.game = copy_of_game
             if figure.validateMove(player.king.pos_x, player.king.pos_y):
-                return False
+                player.king.updatePos(prev_king_pos_x, prev_king_pos_y)
+                figure.game = self
+                return True
+            figure.game = self
 
-        return True
+        player.king.updatePos(prev_king_pos_x, prev_king_pos_y)
+        return False
 
 
     def move_causes_check(self, move: Move, player: Player, enemy_figure: Figure):
@@ -513,11 +521,12 @@ while running:
 
     #check for check kek
     enemy_player = g.player2 if g.turn == g.player1 else g.player1
+    g.turn.inCheck = False
     for figure in enemy_player.figures:
         if figure.validateMove(g.turn.king.pos_x, g.turn.king.pos_y):
             g.turn.inCheck = True
-    else: 
-        g.turn.inCheck = False
+
+    print("Your King is at " +chessEncoder(g.turn.king.pos_x, g.turn.king.pos_y))
 
     g.generateAllMoves(g.turn)
 
