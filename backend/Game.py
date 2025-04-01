@@ -324,8 +324,6 @@ class Game:
                 else:
                     self.turn = self.player1
 
-            clear()
-
 player1 = Player("Player 1", "white")
 player2 = Player("Player 2", "black")
 
