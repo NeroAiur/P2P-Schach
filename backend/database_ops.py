@@ -1,16 +1,9 @@
-import sqlite3
-
-# Test-Parameters
-TESTPATH = "db/user.db"
-TESTUSER = "testomana"
-TESTPW = "b3uz21r3tw904r"
-
-
 # Database Connection Module
 # --------------------------
 # Needs to be called first - the generated cursor is needed
 # as a credential in every single database operation
 def connect_database(dbPath):
+    import sqlite3
     try:
         connection = sqlite3.connect(dbPath)
         cursor = connection.cursor()
@@ -46,18 +39,30 @@ def validate(cursor, username, password, switch):
         
         return False
             
-
+# Add-User Module
+# --------------------------
+# when called will first validate that the username isn't taken already
+# will then create a new database entry with an incremented ID and the username and password given
 def add_user(cursor, username, password):
     if validate(cursor, username, password, "user_creation") == False:
         return 1
     else:
-        uID = cursor.execute("SELECT MAX(ID) FROM user")
+        # fetchone() always returns a tuple, therefore we need to get the first index
+        # of that tuple and increment it by 1
+        uID = cursor.execute("SELECT MAX(ID) FROM user").fetchone()[0] + 1
         cursor.execute(f"""INSERT INTO user(ID, user_name, password_hash, elo)
                           VALUES {uID}, {username}, {password}, 0""")
         return 0
 
 
 # Testing
+# --------------------------
+# will only be called if you run this file directly
 if __name__ == "__main__":
+    # Test-Parameters
+    TESTPATH = "db/user.db"
+    TESTUSER = "testomana"
+    TESTPW = "b3uz21r3tw904r"
+    
     cursor = connect_database(dbPath=TESTPATH)
     print(validate(cursor, TESTUSER, TESTPW, "user_login"))
