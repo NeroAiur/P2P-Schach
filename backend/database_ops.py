@@ -20,8 +20,7 @@ def connect_database(dbPath):
 # switch is either "user_creation" or "user_login"
 # in case of creation - returns True if there is no database-row with the given username
 # in case of login - returns True if there is a database-row with given username and password-hash
-# this module is private and should therefore not be used outside of this file
-def __validate(dbPath, username, password, switch):
+def validate(dbPath, username, password, switch):
     cursor = connect_database(dbPath)
     if switch == "user_creation":
         cursor.execute("SELECT user_name FROM user")
@@ -47,7 +46,7 @@ def __validate(dbPath, username, password, switch):
 # will then create a new database entry with an incremented ID and the username and password given
 def add_user(dbPath, username, password):
     cursor = connect_database(dbPath)
-    if __validate(dbPath, username, password, "user_creation") == False:
+    if validate(dbPath, username, password, "user_creation") == False:
         return 1
     else:
         # fetchone() always returns a tuple, therefore we need to get the first index
@@ -66,5 +65,5 @@ if __name__ == "__main__":
     TESTPATH = "db/user.db"
     TESTUSER = "testomana"
     TESTPW = "b3uz21r3tw904r"
-    
-    print(__validate(TESTPATH, TESTUSER, TESTPW, "user_login"))
+
+    print(validate(TESTPATH, TESTUSER, TESTPW, "user_login"))
