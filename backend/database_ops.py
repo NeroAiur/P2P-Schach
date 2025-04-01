@@ -5,6 +5,7 @@ TESTPATH = "db/user.db"
 TESTUSER = "testomana"
 TESTPW = "b3uz21r3tw904r"
 
+
 # Database Connection Module
 # --------------------------
 # Needs to be called first - the generated cursor is needed
@@ -19,6 +20,7 @@ def connect_database(dbPath):
         code = e.sqlite_errorcode
         name = e.sqlite_errorname
         print(f"Error {code} while connecting to the database '{dbPath}': {name}")
+
 
 # Validation Module
 # --------------------------
