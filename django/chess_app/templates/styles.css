@@ -1,0 +1,171 @@
+:root{
+    --headerHeight: 150px;
+    --footerHeight: 100px;
+    --sidebarWidth: 200px;
+    --contentPadding: 20px;
+    --contentPaddingXL: 100px;
+    --contentPaddingXXL: 150px;
+    --spacingMargin: 100px 250px 100px 250px;
+    --font-size: 12pt;
+    --font-family:'Zilla Slab', Helvetica, sans-serif;
+    --colorMain: #0e7700;
+    --colorAccent1: #009673;
+    --colorAccent2: #d30070;
+    --colorText1:#996100;
+    --colorText2:#E39817;
+    --colorBackground: #dadada;
+    
+}
+html{
+    height: 100%;
+    width: 100%;
+}
+
+body{
+    display: flex;
+    align-items: stretch;
+    height: 100%;
+    width: 100%;
+    margin: 0px;
+    background: #dadada;
+    font-family: var(--font-family);
+    font-size: var(--font-size);
+}
+
+.wrapperXL{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: auto;
+    width: 100%;
+    margin: 100px 0px 100px 250px;
+    background: #111111;
+}
+
+.wrapperXLR{
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: stretch;
+    height: auto;
+    width: 100%;
+    margin: var(--spacingMargin);
+    background: #111111;
+}
+
+.wrapperL{
+    display: flex;
+    align-items: center;
+    align-self:flex-start;
+    justify-content: center;
+    height: 50%;
+    width: 100%;
+    background: #111111;
+}
+
+.wrapperS {
+    display: flex;
+    align-items: flex-end;
+    align-self:flex-end;
+    justify-content: flex-end;
+    height: 5%;
+    width:auto;
+    margin: var(--contentPadding);
+
+}
+
+.loginForm{
+    display: flex;
+    align-content: space-around;
+    flex-direction: column;
+    height: 60%;
+    width: 30%;
+    padding: var(--contentPaddingXXL);
+    background: #FFFFFF;
+}
+
+.textInput{
+    margin: var(--contentPadding);
+}
+
+.inputLabel {
+    margin: var(--contentPadding);
+}
+
+.loginButton {
+    margin: var(--contentPadding);
+}
+
+.roomBrowser{
+    background: #FFFFFF;
+    display: flex;
+    flex-direction: column;
+    align-self: flex-start;
+    width: 100%;
+    height: 50%;
+}
+
+.ranking{
+    background: #555555;
+    width: 100%;
+    height: 100%;
+}
+
+.sidebar{
+    background:#009673;
+    height: 100%;
+    width:10%;
+}
+
+.friendbar {
+    background:#009673;
+    height: auto;
+    width: 30%;
+    margin: 100px 250px 100px 0px;
+    padding: var(--contentPadding);
+}
+
+.createRoom {
+    width: 50px;
+    height: 100%;
+}
+
+.lobbyList {
+    height: 100%;
+    width: auto;
+    overflow: auto;
+}
+
+.lobbyCard {
+    height: 100px;
+    width: auto;
+    margin: var(--contentPadding);
+    border: 1px solid red;
+}
+
+.rankingCard {
+    height: 50px;
+    width: auto;
+    margin: 0 var(--contentPadding) 0 var(--contentPadding);
+    border: 1px solid red;
+}
+
+.gameBoard {
+    height:100%;
+    align-self: flex-start;
+    background: rebeccapurple;
+}
+
+.friendCard {
+    width:auto;
+    height: 100px;
+    border: 1px solid black;
+    padding: var(--contentPadding);
+}
+
+.gameInfo {
+    background: #996100;
+    height: 100%;
+    width: auto;
+}
