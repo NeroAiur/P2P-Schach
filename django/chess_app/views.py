@@ -27,3 +27,11 @@ class ScoreboardView(TemplateView):
 
 class ProfileView(TemplateView):
     template_name = "home.html"
+    add_user(dbpath, username, password)
+    return render(request, "base.html")
+
+def get_move_to_game_calc(request):
+    move = request.POST.post('move')
+
+def send_move_to_game_calc(request):
+    move = request.POST.post('move')
