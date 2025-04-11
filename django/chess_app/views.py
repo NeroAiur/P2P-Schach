@@ -12,3 +12,9 @@ def send_login_data_to_login_function(request):
     # nicht ganz sicher, was dbpath ist
     add_user(dbpath, username, password)
     return render(request, "base.html")
+
+def get_move_to_game_calc(request):
+    move = request.POST.post('move')
+
+def send_move_to_game_calc(request):
+    move = request.POST.post('move')
