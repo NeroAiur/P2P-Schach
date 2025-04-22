@@ -11,13 +11,13 @@ def index(request):
     return render(request, "index.html")
 
 # PSEUDOCODE/IDEE
-def send_login_data_to_login_function(request):
-    username = request.GET.get('username')
-    password = request.GET.get('password')
+# def send_login_data_to_login_function(request):
+#     username = request.GET.get('username')
+#     password = request.GET.get('password')
 
-    # nicht ganz sicher, was dbpath ist
-    add_user("db/user.db", username, password)
-    return render(request, "base.html")
+#     # nicht ganz sicher, was dbpath ist
+#     add_user("db/user.db", username, password)
+#     return render(request, "base.html")
 
 class GameView(TemplateView):
     template_name = "game.html"
@@ -25,10 +25,10 @@ class GameView(TemplateView):
 class ScoreboardView(TemplateView):
     template_name = "scoreboard.html"
 
-class ProfileView(TemplateView):
-    template_name = "home.html"
-    add_user(dbpath, username, password)
-    return render(request, "base.html")
+# class ProfileView(TemplateView):
+#     template_name = "home.html"
+#     add_user(dbpath, username, password)
+#     return render(request, "base.html")
 
 def get_move_to_game_calc(request):
     move = request.POST.post('move')
