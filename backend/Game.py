@@ -3,9 +3,6 @@ from copy import deepcopy
 from Pieces import *
 from ChessTranscode import *
 from Move import Move
-import os
-
-clear = lambda: os.system('cls')
 
 class bcolors:
     HEADER = '\033[95m'
@@ -17,19 +14,6 @@ class bcolors:
     ENDC = '\033[0m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
-
-class Move:
-    def __init__(self, piece: Piece, from_x, from_y, to_x, to_y, pawn_condition=None):
-        self.piece = piece
-        self.from_x = from_x
-        self.from_y = from_y
-        self.to_x = to_x
-        self.to_y = to_y
-        self.is_pawn = self.piece.name == 'P'
-        self.pawn_condition = pawn_condition # 0 = has to be empty, 1 there has to be an enemy
-
-    def printMove(self):
-        print(self.piece.name + " from " + chessEncoder(self.from_x, self.from_y) + " to " + chessEncoder(self.to_x, self.to_y))
 
 class Player:
     def __init__(self, name, color):
@@ -47,22 +31,22 @@ class Player:
 class Game:
     def __init__(self, player1: Player, player2: Player, start_time=150, add_time=10):
         self.player1 = player1 # player 1 is white 
-        self.player2 = player2
+        self.player2 = player2 
         self.board = self.initBoard()
         self.initPlayerPieces()
         self.turn = player1
 
     def printBoard(self):
         for i in range(8):
-            print (str(i+1) + " |", end=' ')
+            print (str(8-i) + " |", end=' ')
             for j in range(8):
-                if self.getBoard(j, i) == 0:
+                if self.getBoard(j, 7-i) == 0:
                     print("0", end=' ')
                 else:
-                    if self.getBoard(j, i).color == "white":
-                        print(bcolors.OKGREEN + self.board[i*8+j].name + bcolors.ENDC, end=' ')
+                    if self.getBoard(j, 7-i).color == "white":
+                        print(bcolors.OKGREEN + self.board[(7-i)*8+j].name + bcolors.ENDC, end=' ')
                     else:
-                        print(bcolors.FAIL + self.board[i*8+j].name + bcolors.ENDC, end=' ')
+                        print(bcolors.FAIL + self.board[(7-i)*8+j].name + bcolors.ENDC, end=' ')
                     
             print()
         print("    ---------------")
@@ -103,14 +87,14 @@ class Game:
         board[7*8 + 7] = Rook(7, 7, self.player2, "black", self)
 
         # spawn in the queens
-        board[4] = Queen(4, 0, self.player1, "white", self)
+        board[3] = Queen(3, 0, self.player1, "white", self)
 
-        board[7*8 + 4] = Queen(4, 7, self.player2, "black", self)
+        board[7*8 + 3] = Queen(3, 7, self.player2, "black", self)
 
         # spawn in the kings
-        board[3] = King(3, 0, self.player1, "white", self)
+        board[4] = King(4, 0, self.player1, "white", self)
 
-        board[7*8 + 3] = King(3, 7, self.player2, "black", self)
+        board[7*8 + 4] = King(4, 7, self.player2, "black", self)
 
         return board
     
@@ -123,8 +107,8 @@ class Game:
                     if y > 5:
                         self.player2.figures.append(self.getBoard(x, y))
 
-        self.player1.king = self.getBoard(3, 0)
-        self.player2.king = self.getBoard(3, 7)
+        self.player1.king = self.getBoard(4, 0)
+        self.player2.king = self.getBoard(4, 7)
 
     def move(self, prev_x, prev_y, new_x, new_y):
 
@@ -151,16 +135,37 @@ class Game:
             for move in self.turn.moves:
                 if move.from_x == prev_x and move.from_y == prev_y and move.to_x == new_x and move.to_y == new_y:
                     # Valid Move
-                    # KILL THE PIECE
-                    if self.getBoard(new_x, new_y) != 0:
-                        if self.turn == self.player1:
-                            self.player2.figures.remove(self.getBoard(new_x, new_y))
-                        else:
-                            self.player1.figures.remove(self.getBoard(new_x, new_y))
-                        self.setBoard(new_x, new_y, 0)
+                    move.piece.has_been_moved = True
+                    
+                    # Castling
+                    if move.linked_to != None:
+                        self.turn.king.has_castled = True
 
-                    self.getBoard(prev_x, prev_y).updatePos(new_x, new_y)
-                    self.setBoard(new_x, new_y, self.getBoard(prev_x, prev_y))
+                        rook_move = move.linked_to
+                        rook_move.piece.has_been_moved = True
+                        rook_move.piece.updatePos(rook_move.to_x, rook_move.to_y)
+                        self.setBoard(rook_move.to_x, rook_move.to_y, rook_move.piece)
+                        self.setBoard(rook_move.from_x, rook_move.from_y, 0)
+                        
+
+                    # "Moved two fields last turn"-Upate wegen en passant 
+                    for figure in self.turn.figures:
+                        if figure.name == "P":
+                            figure.moved_two_fields_last_turn = False
+
+                    if move.piece.name == 'P' and abs(move.from_y - move.to_y) == 2:
+                        move.piece.moved_two_fields_last_turn = True
+
+                    # KILL THE PIECE
+                    if move.kills != None:
+                        if self.turn == self.player1:
+                            self.player2.figures.remove(move.kills)
+                        else:
+                            self.player1.figures.remove(move.kills)
+                        self.setBoard(move.kills.pos_x, move.kills.pos_y, 0)
+
+                    move.piece.updatePos(new_x, new_y)
+                    self.setBoard(new_x, new_y, move.piece)
                     self.setBoard(prev_x, prev_y, 0)
 
                     return True
@@ -171,16 +176,54 @@ class Game:
             
     def generateAllMoves(self, player: Player): # Definitiv die effizienteste Methode jaja bruteforce ist sehr TOLL mir gehts gut
         player.moves = []
+        enemy_player = self.player2 if player == self.player1 else self.player1
+        to_remove = []
 
-        # Generiere all theoretisch möglichen Züge vom Spieler (inklusive konditioneller Bauernzüge)
+        # Generiere all theoretisch möglichen Züge
+        # Figuren
         for figure in player.figures:
             new_moves = figure.bruteForceGenerateAllMoves()
             if new_moves != None:
                 player.moves.extend(new_moves)
 
+        # Special Moves
+        # en passant
+        for enemy_figure in enemy_player.figures:
+            if enemy_figure.name == 'P' and enemy_figure.moved_two_fields_last_turn:
+                for own_figure in player.figures:
+                    if own_figure.name == 'P' and (own_figure.pos_x == enemy_figure.pos_x + 1 or own_figure.pos_x == enemy_figure.pos_x - 1):
+                        if player.color == 'white' and own_figure.pos_y == 4:
+                            player.moves.append(Move(own_figure, own_figure.pos_x, own_figure.pos_y, enemy_figure.pos_x, enemy_figure.pos_y + 1, enemy_figure, True))
+                        if player.color == 'black' and own_figure.pos_y == 3:
+                            player.moves.append(Move(own_figure, own_figure.pos_x, own_figure.pos_y, enemy_figure.pos_x, enemy_figure.pos_y - 1, enemy_figure, True))
 
-        enemy_player = self.player2 if player == self.player1 else self.player1
-        to_remove = []
+        # castling
+        if player.king.has_been_moved == False and player.king.has_castled == False and player.inCheck == False:
+            y_pos = 0
+            if player.color == 'black':
+                y_pos = 7
+            rook_pos = self.getBoard(0, y_pos)
+            if rook_pos != 0 and rook_pos.name == "R" and rook_pos.has_been_moved == False:
+                # long castling
+                if self.getBoard(1, y_pos) == 0 and self.getBoard(2, y_pos) == 0 and self.getBoard(3, y_pos) == 0:
+                    move_is_possible = True
+                    for figure in enemy_player.figures:
+                        if figure.validateMove(1, y_pos) or figure.validateMove(2, y_pos) or figure.validateMove(3, y_pos):
+                            move_is_possible = False
+                            break
+                    if move_is_possible:
+                        player.moves.append(Move(player.king, player.king.pos_x, player.king.pos_y, 2, y_pos, None, True, Move(rook_pos, rook_pos.pos_x, rook_pos.pos_y, 3, y_pos, None, True)))
+                # short castling
+                if self.getBoard(5, y_pos) == 0 and self.getBoard(6, y_pos) == 0:
+                    rook_pos = self.getBoard(7, y_pos)
+                    move_is_possible = True
+                    for figure in enemy_player.figures:
+                        if figure.validateMove(5, y_pos) or figure.validateMove(6, y_pos):
+                            move_is_possible = False
+                            break
+                    if move_is_possible:
+                        player.moves.append(Move(player.king, player.king.pos_x, player.king.pos_y, 6, y_pos, None, True, Move(rook_pos, rook_pos.pos_x, rook_pos.pos_y, 5, y_pos, None, True)))
+
 
         for move in player.moves:
             if self.simulate_move(move, player):
@@ -193,7 +236,8 @@ class Game:
 
         player.moves = list(set(player.moves))
                 
-
+    # returns true if the players king is in check after making this move   == move is illegal
+    # returns false otherwise                                               == move is legal
     def simulate_move(self, move: Move, player: Player):  
         # Falls der König sich bewegt
         prev_king_pos_x = player.king.pos_x
@@ -208,8 +252,8 @@ class Game:
             enemy_player = copy_of_game.player1
 
         # wenn ein gegner dort ist, vernichte ihn
-        if copy_of_game.getBoard(move.to_x, move.to_y) != 0:
-            enemy_player.figures.remove(copy_of_game.getBoard(move.to_x, move.to_y))
+        if move.kills != None:
+            enemy_player.figures.remove(copy_of_game.getBoard(move.kills.pos_x, move.kills.pos_y))
             
         copy_of_game.setBoard(move.to_x, move.to_y, move.piece)
         copy_of_game.setBoard(move.from_x, move.from_y, 0)

@@ -7,6 +7,7 @@ class Piece:
         self.owner = owner
         self.color = color
         self.game = game
+        self.has_been_moved = False
 
     def updatePos(self, x, y):
         self.pos_x = x
@@ -22,7 +23,10 @@ class Piece:
         for x in range(8):
             for y in range(8):
                 if self.validateMove(x, y):
-                    moves.append(Move(self, self.pos_x, self.pos_y, x, y))
+                    kills = self.game.getBoard(x, y)
+                    if kills == 0:
+                        kills = None
+                    moves.append(Move(self, self.pos_x, self.pos_y, x, y, kills))
         return moves
         
         #else:
@@ -33,6 +37,7 @@ class Pawn(Piece):
     def __init__(self, pos_x, pos_y, owner, color, game):
         super().__init__(pos_x, pos_y, owner, color, game)
         self.name = 'P'
+        self.moved_two_fields_last_turn = False
 
     def validateMove(self, new_x, new_y):
         # standard 1 nach vorne
@@ -221,6 +226,7 @@ class King(Piece):
     def __init__(self, pos_x, pos_y, owner, color, game):
         super().__init__(pos_x, pos_y, owner, color, game)
         self.name = 'K'
+        self.has_castled = False
     
     def validateMove(self, new_x, new_y):
         if abs(self.pos_x - new_x) <= 1 and abs(self.pos_y - new_y) <= 1:
