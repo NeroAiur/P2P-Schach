@@ -1,4 +1,4 @@
-import { setAttributes, setUpHTML } from "./helperScripts.js";
+import { setAttributes, setUpHTML, cleanInput, hash } from "./helperScripts.js";
 
 
 window.onload = () =>{
@@ -49,10 +49,10 @@ class loginForm {
         txt = document.createTextNode("Passwort: ");
         label.appendChild(txt);
 
-        var button = setUpHTML("input", {type:"button", class:"loginButton", id:"signInButton"},this.parent);
+        var button = setUpHTML("input", {type:"button", class:"loginButton", id:"signInButton", value: "Log in!"},this.parent);
         button.addEventListener("click", this.fetchLogin.bind(this))
 
-        button = setUpHTML("input", {type:"button", class:"loginButton", id:"registerButton"},this.parent);
+        button = setUpHTML("input", {type:"button", class:"loginButton", id:"registerButton", value: "Register here!"},this.parent);
         button.addEventListener("click", this.registerRegister.bind(this))
 
     }
@@ -72,26 +72,37 @@ class loginForm {
         label.appendChild(txt);
 
         label = setUpHTML("label", {"for":"password", class:"inputLabel"}, this.parent);
-        this.pwRef = setUpHTML("input",{"type":"password","name":"password", class:"textInput", id:"pwInput"},this.parent);
+        this.pwRef = setUpHTML("input",{"type":"password","name":"password", class:"textInput", id:"pwInput"}, this.parent);
         txt = document.createTextNode("Passwort: ");
         label.appendChild(txt);
 
-        var button = setUpHTML("input", {type:"button", class:"loginButton", id:"signUpButton"},this.parent);
+        var button = setUpHTML("input", {type:"button", class:"loginButton", id:"signUpButton", value:"Register!"}, this.parent);
         button.addEventListener("click", this.fetchSignUp.bind(this))
 
-        button = setUpHTML("input", {type:"button", class:"loginButton", id:"loginButton"},this.parent);
+        button = setUpHTML("input", {type:"button", class:"loginButton", id:"loginButton", value:"Already a User? Sign in!"},this.parent);
         button.addEventListener("click", this.registerLogin.bind(this))
 
     }
 
     async fetchLogin(){
 
+        var email = this.eRef.value;
+        var password = this.pwRef.value;
+
+        if(password.lenght<8){
+            //Password length to short
+            return
+        }
+
+        email= cleanInput(email);
+        password = cleanInput(password)
+
         const queryparams = {
-            email: this.eRef.value,
-            password:  this.pwRef.value
+            email: email,
+            password:  password
         };
 
-        var values = await (await fetch("http://127.0.0.1:5500/frontend/dashboard.html", {
+        var response = await (await fetch("http://127.0.0.1:8000/", {
 
             method: "POST",
             body: JSON.stringify(queryparams),
@@ -99,9 +110,12 @@ class loginForm {
 
         })).text();
 
-        var html = await (await fetch("http://127.0.0.1:5500/frontend/dashboard.html")).text();
+        if(true){
 
-        document.body.innerHTML=html;
+            navigate("http://127.0.0.1:8000/dashboard")
+
+        }
+
     }
 
     fetchSignUp(){

@@ -20,10 +20,10 @@ def index(request):
 #     return render(request, "base.html")
 
 class GameView(TemplateView):
-    template_name = "game.html"
+    template_name = "chessboard.html"
 
-class ScoreboardView(TemplateView):
-    template_name = "scoreboard.html"
+class DashboardView(TemplateView):
+    template_name = "dashboard.html"
 
 # class ProfileView(TemplateView):
 #     template_name = "home.html"

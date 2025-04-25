@@ -1,30 +1,22 @@
+{% load static %}
+
 <!DOCTYPE html>
 
 <html>
 
 <head>
-    <link href="styles.css" rel="stylesheet" />
-    <script src="dashboard.js" type="module"></script>
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+    <script src="{% static 'js/dashboard.js' %}" type="module"></script>
 
 </head>
 
 <body>
     <div id="sidebar" class="sidebar"></div>
     <div id="wrapper" class="wrapperXL">
-<<<<<<< HEAD
-        
-        <div id="roomBrowser" class="roomBrowser">
-                
-        </div>
-
-        <div class="wrapperL">
-
-=======
 
         <div id="roomBrowser" class="roomBrowser">
         </div>
         <div class="wrapperL">
->>>>>>> 13b8939ce91492d9e89699eb82752224a2630914
             <div id="globalRanking" class="ranking">
 
             </div>
@@ -32,10 +24,6 @@
 
             </div>
         </div>
-<<<<<<< HEAD
-
-=======
->>>>>>> 13b8939ce91492d9e89699eb82752224a2630914
     </div>
     <div id="friendbar" class="friendbar"></div>
    

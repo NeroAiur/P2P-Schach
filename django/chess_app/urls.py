@@ -7,7 +7,7 @@ urlpatterns = [
     # IDEE, nicht finaler Code
 
     path('game',         GameView.as_view(),       name="game"),
-    path('scoreboard',   ScoreboardView.as_view(), name='scoreboard'),
+    path('dashboard',   DashboardView.as_view(), name='dashboard'),
     # path('profile/<ID>', ProfileView.as_view(),    name="profile"),
 
     # path('login',                              send_login_data_to_login_function, name="login"),
