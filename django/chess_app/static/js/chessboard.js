@@ -1,3 +1,5 @@
+{}
+
 import { setAttributes, setUpHTML, setUpSVG } from "./helperScripts.js";
 import { gamePiece } from "./pieces.js"
 
@@ -45,28 +47,28 @@ class chessboard {
             }
         }
 
-        this.gameBoard[0][0] = new gamePiece(this, 0, "./Chesspieces/SVG/Turm.svg", "white", { x: 0, y: 0 }, whiteGroup);
-        this.gameBoard[0][1] = new gamePiece(this, 1, "./Chesspieces/SVG/Springer.svg", "white", { x: 0, y: 1 }, whiteGroup);
-        this.gameBoard[0][2] = new gamePiece(this, 2, "./Chesspieces/SVG/Läufer.svg", "white", { x: 0, y: 2 }, whiteGroup);
-        this.gameBoard[0][3] = new gamePiece(this, 3, "./Chesspieces/SVG/Dame.svg", "white", { x: 0, y: 3 }, whiteGroup);
-        this.gameBoard[0][3] = new gamePiece(this, 4, "./Chesspieces/SVG/König.svg", "white", { x: 0, y: 4 }, whiteGroup);
-        this.gameBoard[0][2] = new gamePiece(this, 5, "./Chesspieces/SVG/Läufer.svg", "white", { x: 0, y: 5 }, whiteGroup);
-        this.gameBoard[0][1] = new gamePiece(this, 6, "./Chesspieces/SVG/Springer.svg", "white", { x: 0, y: 6 }, whiteGroup);
-        this.gameBoard[0][0] = new gamePiece(this, 7, "./Chesspieces/SVG/Turm.svg", "white", { x: 0, y: 7 }, whiteGroup);
+        this.gameBoard[0][0] = new gamePiece(this, 0, "./static/Chesspieces/SVG/Turm.svg", "white", { x: 0, y: 0 }, whiteGroup);
+        this.gameBoard[0][1] = new gamePiece(this, 1, "./static/Chesspieces/SVG/Springer.svg", "white", { x: 0, y: 1 }, whiteGroup);
+        this.gameBoard[0][2] = new gamePiece(this, 2, "./static/Chesspieces/SVG/Läufer.svg", "white", { x: 0, y: 2 }, whiteGroup);
+        this.gameBoard[0][3] = new gamePiece(this, 3, "./static/Chesspieces/SVG/Dame.svg", "white", { x: 0, y: 3 }, whiteGroup);
+        this.gameBoard[0][3] = new gamePiece(this, 4, "./static/Chesspieces/SVG/König.svg", "white", { x: 0, y: 4 }, whiteGroup);
+        this.gameBoard[0][2] = new gamePiece(this, 5, "./static/Chesspieces/SVG/Läufer.svg", "white", { x: 0, y: 5 }, whiteGroup);
+        this.gameBoard[0][1] = new gamePiece(this, 6, "./static/Chesspieces/SVG/Springer.svg", "white", { x: 0, y: 6 }, whiteGroup);
+        this.gameBoard[0][0] = new gamePiece(this, 7, "./static/Chesspieces/SVG/Turm.svg", "white", { x: 0, y: 7 }, whiteGroup);
 
-        this.gameBoard[7][0] = new gamePiece(this, 0, "./Chesspieces/SVG/Turm.svg", "black", { x: 7, y: 0 }, blackGroup);
-        this.gameBoard[7][1] = new gamePiece(this, 1, "./Chesspieces/SVG/Springer.svg", "black", { x: 7, y: 1 }, blackGroup);
-        this.gameBoard[7][2] = new gamePiece(this, 2, "./Chesspieces/SVG/Läufer.svg", "black", { x: 7, y: 2 }, blackGroup);
-        this.gameBoard[7][3] = new gamePiece(this, 3, "./Chesspieces/SVG/Dame.svg", "black", { x: 7, y: 3 }, blackGroup);
-        this.gameBoard[7][3] = new gamePiece(this, 4, "./Chesspieces/SVG/König.svg", "black", { x: 7, y: 4 }, blackGroup);
-        this.gameBoard[7][2] = new gamePiece(this, 5, "./Chesspieces/SVG/Läufer.svg", "black", { x: 7, y: 5 }, blackGroup);
-        this.gameBoard[7][1] = new gamePiece(this, 6, "./Chesspieces/SVG/Springer.svg", "black", { x: 7, y: 6 }, blackGroup);
-        this.gameBoard[7][0] = new gamePiece(this, 7, "./Chesspieces/SVG/Turm.svg", "black", { x: 7, y: 7 }, blackGroup);
+        this.gameBoard[7][0] = new gamePiece(this, 0, "./static/Chesspieces/SVG/Turm.svg", "black", { x: 7, y: 0 }, blackGroup);
+        this.gameBoard[7][1] = new gamePiece(this, 1, "./static/Chesspieces/SVG/Springer.svg", "black", { x: 7, y: 1 }, blackGroup);
+        this.gameBoard[7][2] = new gamePiece(this, 2, "./static/Chesspieces/SVG/Läufer.svg", "black", { x: 7, y: 2 }, blackGroup);
+        this.gameBoard[7][3] = new gamePiece(this, 3, "./static/Chesspieces/SVG/Dame.svg", "black", { x: 7, y: 3 }, blackGroup);
+        this.gameBoard[7][3] = new gamePiece(this, 4, "./static/Chesspieces/SVG/König.svg", "black", { x: 7, y: 4 }, blackGroup);
+        this.gameBoard[7][2] = new gamePiece(this, 5, "./static/Chesspieces/SVG/Läufer.svg", "black", { x: 7, y: 5 }, blackGroup);
+        this.gameBoard[7][1] = new gamePiece(this, 6, "./static/Chesspieces/SVG/Springer.svg", "black", { x: 7, y: 6 }, blackGroup);
+        this.gameBoard[7][0] = new gamePiece(this, 7, "./static/Chesspieces/SVG/Turm.svg", "black", { x: 7, y: 7 }, blackGroup);
 
         for (let i = 0; i < 8; i++) {
 
-            this.gameBoard[1][i] = new gamePiece(this, 7 + i, "./Chesspieces/SVG/Bauer.svg", "white", { x: 1, y: i }, whiteGroup)
-            this.gameBoard[6][i] = new gamePiece(this, 7 + i, "./Chesspieces/SVG/Bauer.svg", "black", { x: 6, y: i }, blackGroup)
+            this.gameBoard[1][i] = new gamePiece(this, 7 + i, "./static/Chesspieces/SVG/Bauer.svg", "white", { x: 1, y: i }, whiteGroup)
+            this.gameBoard[6][i] = new gamePiece(this, 7 + i, "./static/Chesspieces/SVG/Bauer.svg", "black", { x: 6, y: i }, blackGroup)
 
         }
 

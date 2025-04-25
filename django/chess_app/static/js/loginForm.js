@@ -102,7 +102,7 @@ class loginForm {
             password:  password
         };
 
-        var response = await (await fetch("http://127.0.0.1:8000/", {
+        var response = await (await fetch("./login", {
 
             method: "POST",
             body: JSON.stringify(queryparams),
@@ -110,11 +110,14 @@ class loginForm {
 
         })).text();
 
-        if(true){
+        
+        if(response =="SUCCESS"){
 
-            navigate("http://127.0.0.1:8000/dashboard")
-
+            window.location = "./dashboard"
+            
         }
+
+        
 
     }
 
