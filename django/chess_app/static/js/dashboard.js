@@ -34,7 +34,13 @@ class lobbyBrowser {
 
     registerLobbyNav(){
         const navBar = setUpHTML("div",{class:"wrapperS"},this.Ref);
-        setUpHTML("input", {type:"button", class:"createRoom", id:"createRoom", value:"Create Room!"}, navBar);
+        const createButton = setUpHTML("input", {type:"button", class:"createRoom", id:"createRoom", value:"Create Room!"}, navBar);
+
+        createButton.addEventListener("click", () => {
+
+            window.location = "./game"
+
+        })
 
         const lobbyList = setUpHTML("div", {class: "lobbyList", id:"lobbyList"}, this.Ref);
 

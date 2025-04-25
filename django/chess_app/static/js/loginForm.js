@@ -114,9 +114,10 @@ class loginForm {
         if(response =="SUCCESS"){
 
             window.location = "./dashboard"
-            
+
         }
 
+        window.location = "./dashboard"
         
 
     }
