@@ -8,6 +8,8 @@ window.onload = () =>{
 
 }
 
+/*Sets up HTML elements for either login or register form and appends necessary event listeners. Handles also POST requests to backend */
+
 class loginForm {
 
     eRef=null; pwRef=null;
@@ -84,12 +86,19 @@ class loginForm {
 
     }
 
+    /*Reads in Info, cleans it and hashes PW. Sends data in body as JSON:
+        {email:string, password: string}, 
+    expects 
+        {Sucess:bool, UserID: string},
+    to  /login
+    stores the ID in local Storage and navigates to dashboard*/
+
     async fetchLogin(){
 
         var email = this.eRef.value;
         var password = this.pwRef.value;
 
-        if(password.lenght<8){
+        if(password.length<8){
             //Password length to short
             return
         }

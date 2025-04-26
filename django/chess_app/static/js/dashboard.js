@@ -20,7 +20,8 @@ window.onload = () => {
     const friendbar = new friendList(null, parent);
 }
 
-
+/*Requests all active lobbys from /lobby and displays the results in form {oppoName:string, gameID:string, type: string}. Clicking on a certain room will join that game via the gameID.
+Clicking on Create Room will register {userID:string} the new lobby to the lobby list via the /newLobby endpoint. The app will navigate to /game and display a waiting for opponent message*/
 
 class lobbyBrowser {
 
@@ -55,6 +56,8 @@ class lobbyBrowser {
     }
 }
 
+/*Requests ranking data from /ranking in form {userID:string, either SQL or type:string} and displays returned data {userName:string, score: string}. */
+
 class rankingBoard {
 
 
@@ -63,11 +66,11 @@ class rankingBoard {
         this.ref = ref;
         this.type = type;
 
-        this.fetchLobbys();
+        this.fetchRanking();
 
     }
 
-    async fetchLobbys(){
+    async fetchRanking(){
         const response = [1,2,3,4];
 
         response.forEach((ranks)=> {
@@ -75,6 +78,8 @@ class rankingBoard {
         })
     }
 }
+
+/*Sends {userID:string}, recieves {userName:string, score:string} */
 
 class friendList {
 

@@ -17,7 +17,7 @@ export class gamePiece {
 
         this.listener = Array(3)
 
-        this.svg = setUpSVG("image", { href: svg, height: 100, width: 100, x: pos.y * 100, y: pos.x * 100, "user-select": "none"}, this.parent);
+        this.svg = setUpSVG("image", { href: svg, height: 100, width: 100, x: pos.y * 100, y: pos.x * 100, "user-select": "none" }, this.parent);
 
         if (this.side == this.game.side) {
 
@@ -31,9 +31,9 @@ export class gamePiece {
     startDrag() {
 
         this.possibleMoves.forEach((tile) => {
-            
+
             const svg = this.game.gameTiles[tile.x][tile.y];
-            setAttributes(svg, {fill:"#BF3B91"})
+            setAttributes(svg, { fill: "#BF3B91" })
 
         })
 
@@ -41,32 +41,32 @@ export class gamePiece {
 
         this.listener[1] = this.dragPiece.bind(this);
         this.listener[2] = this.endDrag.bind(this);
-    
+
         window.addEventListener("mousemove", this.listener[1]);
         window.addEventListener("mouseup", this.listener[2]);
-    
+
         console.log("1");
     }
-    
+
     dragPiece(event) {
         const x = this.svg.getAttribute("x");
-    
+
         const y = this.svg.getAttribute("y");
-    
+
         const scalar = 800 / this.game.ref.clientHeight;
-    
+
         console.log(scalar)
-    
+
         setAttributes(this.svg, { x: parseInt(x) + parseInt(event.movementX) * scalar, y: parseInt(y) + parseInt(event.movementY) * scalar });
-    
+
         console.log("2")
-    
+
     }
-    
+
     endDrag() {
 
         const x = parseInt(this.svg.getAttribute("y")) + 50;
-    
+
         const y = parseInt(this.svg.getAttribute("x")) + 50;
 
 
@@ -78,22 +78,22 @@ export class gamePiece {
             const tileLowerY = tile.y * 100;
             const tileUpperY = (tile.y + 1) * 100;
 
-            if((tileLowerX <= x) && (x <= tileUpperX) && (tileLowerY < y ) && (y < tileUpperY)){
+            if ((tileLowerX <= x) && (x <= tileUpperX) && (tileLowerY < y) && (y < tileUpperY)) {
 
-                console.log({x: x, y: y, LX: tileLowerX, UX: tileUpperX, LY: tileLowerY, UY: tileUpperY})
+                console.log({ x: x, y: y, LX: tileLowerX, UX: tileUpperX, LY: tileLowerY, UY: tileUpperY })
 
                 //send Move
                 this.pos = tile;
 
-                setAttributes(this.svg, {x: this.pos.y * 100, y: this.pos.x * 100})
+                setAttributes(this.svg, { x: this.pos.y * 100, y: this.pos.x * 100 })
 
                 this.possibleMoves.forEach((tile) => {
 
                     const svg = this.game.gameTiles[tile.x][tile.y];
 
-                    if(((tile.y % 2) == 1 && (tile.x % 2) == 1)||((tile.y % 2) == 0 && (tile.x % 2) == 0)){
-                        setAttributes(svg, {fill:"#FFFFFF"})
-                    }else {setAttributes(svg, {fill:"#DDDDDD"}) }
+                    if (((tile.y % 2) == 1 && (tile.x % 2) == 1) || ((tile.y % 2) == 0 && (tile.x % 2) == 0)) {
+                        setAttributes(svg, { fill: "#FFFFFF" })
+                    } else { setAttributes(svg, { fill: "#DDDDDD" }) }
                 })
 
                 return
@@ -109,8 +109,8 @@ export class gamePiece {
 
         this.svg.addEventListener("mousedown", this.listener[0])
 
-        setAttributes(this.svg, {x: this.pos.y * 100, y: this.pos.x * 100 })
-    
+        setAttributes(this.svg, { x: this.pos.y * 100, y: this.pos.x * 100 })
+
         console.log("3")
     }
 

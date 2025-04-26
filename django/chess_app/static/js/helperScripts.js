@@ -1,9 +1,12 @@
+
+//Applies css styles "attrs" in form JSON to element "el".
 export function setAttributes(el, attrs) {
 
     Object.keys(attrs).forEach(key => el.setAttribute(key, attrs[key]));
 
 }
 
+//Creates and appends HTML element
 export function setUpHTML(type, attributes, parent) {
 
     let html = document.createElement(type);
