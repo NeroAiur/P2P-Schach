@@ -1,4 +1,4 @@
-import { setAttributes, setUpHTML, cleanInput, hash } from "./helperScripts.js";
+import { setAttributes, setUpHTML, cleanInput, hash, getCookie } from "./helperScripts.js";
 
 
 window.onload = () =>{
@@ -23,22 +23,6 @@ class loginForm {
 
         this.registerLogin();
 
-    }
-
-    getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== "") {
-            const cookies = document.cookie.split(";");
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                // Prüfe, ob dieses Cookie mit dem gewünschten Namen beginnt
-                if (cookie.startsWith(name + "=")) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
     }
 
     clearChildren(){
@@ -121,12 +105,9 @@ class loginForm {
             password:  password
         };
 
-        const csrftoken = this.getCookie('csrftoken');
-        const csrftoken = this.getCookie('csrftoken');
+        const csrftoken = getCookie('csrftoken');
 
-        var response = await fetch("./login", {
-
-        var response = await (await fetch("/login", {
+        await fetch("/login", {
             method: "POST",
             body: JSON.stringify(queryparams),
             headers: {
@@ -134,20 +115,9 @@ class loginForm {
                 "X-CSRFToken": csrftoken
             },
             credentials: "include"
-        })).text();
+        });
 
-        // var html = await(await fetch("/login")).text();
-
-        // document.body.innerHTML=html;
-
-        
-        // if(response =="SUCCESS"){
-
-        //     window.location = "./dashboard"
-
-        // }
-
-        // window.location = "./dashboard"
+        window.location = "./dashboard"
         
 
     }

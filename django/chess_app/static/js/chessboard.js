@@ -1,6 +1,6 @@
 { }
 
-import { setAttributes, setUpHTML, setUpSVG } from "./helperScripts.js";
+import { setAttributes, setUpHTML, setUpSVG, encodeRow } from "./helperScripts.js";
 import { gamePiece } from "./pieces.js"
 
 window.onload = () => {
@@ -32,7 +32,7 @@ class chessboard {
         this.setUpGame()
         this.setUpInfo();
 
-        this.awaitGame();
+        this.interID = setInterval(() => this.awaitGame(), 2500);
 
     }
 
@@ -50,18 +50,23 @@ class chessboard {
 
         }));
 
-        this.gameBoard.map((row)=>{
-            row.map((tile)=>{
-                
-                if(tile instanceof gamePiece){
-                    tile.startListen();
-                }
+        if(true){
 
+            this.gameBoard.map((row)=>{
+                row.map((tile)=>{
+                    
+                    if(tile instanceof gamePiece){
+                        tile.startListen();
+                    }
+    
+                })
             })
-        })
+    
+            setInterval(() => { this.timer--; this.timerTxt.textContent = Math.floor(this.timer / 60) + " : " + (this.timer % 60) }, 1000);
 
+            clearInterval(this.interID)
 
-        setInterval(() => { this.timer--; this.timerTxt.textContent = Math.floor(this.timer / 60) + " : " + (this.timer % 60) }, 1000);
+        }
 
     }
 
@@ -90,6 +95,16 @@ class chessboard {
                 }
 
             }
+        }
+
+        for(let i=0; i<8; i++){
+
+            var svg = setUpSVG("text", {x: i * 100 + 85, y:15, height: 100, width: 100, class:"boardLettering"}, tileGroup)
+            svg.textContent=i+1;
+
+            svg= setUpSVG("text", {x: 5, y: i * 100 + 95, height: 100, width: 100, class:"boardLettering"}, tileGroup)
+            svg.textContent= encodeRow(i);
+
         }
 
         this.gameBoard[0][0] = new gamePiece(this, 0, "./static/Chesspieces/SVG/Turm_w.svg", "white", { x: 0, y: 0 }, whiteGroup, []);
