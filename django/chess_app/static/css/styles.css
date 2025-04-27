@@ -23,6 +23,7 @@
     --colorAccent1: #56008c;
     --colorAccent2: #4c0050;
     --colorSignal: #a80054;
+    --colorSignalHigh: #d8006c;
     --colorBoardDark: #500028;
     --colorText1:#f2f2f2;
     --colorText2:#797979;
@@ -61,6 +62,7 @@ input{
     font-size: var(--font-size);
 
 }
+
 input::placeholder{
 
     font-family: var(--font-family);
@@ -157,6 +159,10 @@ input::placeholder{
     border: none;
 }
 
+.loginButton:hover{
+    background-color: var(--colorSignalHigh);
+}
+
 .roomBrowser{
     display: flex;
     flex-direction: column;
@@ -201,6 +207,10 @@ input::placeholder{
     background-color: var(--colorSignal);
     
     border:none;
+}
+
+.createRoom:hover{
+    background-color: var(--colorSignalHigh);
 }
 
 .lobbyList {

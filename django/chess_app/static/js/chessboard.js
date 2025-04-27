@@ -7,6 +7,7 @@ window.onload = () => {
 
     var parent = document.getElementById("gameBoard")
     const gameboard = new chessboard("0000", null, "white", "fast", parent)
+    
 }
 
 class chessboard {

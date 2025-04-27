@@ -51,7 +51,6 @@ export class gamePiece {
         window.addEventListener("mousemove", this.listener[1]);
         window.addEventListener("mouseup", this.listener[2]);
 
-        console.log("1");
     }
 
     dragPiece(event) {
@@ -64,9 +63,7 @@ export class gamePiece {
         console.log(scalar)
 
         setAttributes(this.svg, { x: parseInt(x) + parseInt(event.movementX) * scalar, y: parseInt(y) + parseInt(event.movementY) * scalar });
-
-        console.log("2")
-
+        
     }
 
     endDrag() {
@@ -117,7 +114,6 @@ export class gamePiece {
 
         setAttributes(this.svg, { x: this.pos.y * 100, y: this.pos.x * 100 })
 
-        console.log("3")
     }
 
 }
