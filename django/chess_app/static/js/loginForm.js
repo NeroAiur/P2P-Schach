@@ -21,6 +21,22 @@ class loginForm {
 
     }
 
+    getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== "") {
+            const cookies = document.cookie.split(";");
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Prüfe, ob dieses Cookie mit dem gewünschten Namen beginnt
+                if (cookie.startsWith(name + "=")) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
     clearChildren(){
 
         var children = this.parent.children;
@@ -102,22 +118,30 @@ class loginForm {
             password:  password
         };
 
-        var response = await (await fetch("./login", {
+        const csrftoken = this.getCookie('csrftoken');
 
+        var response = await (await fetch("/login", {
             method: "POST",
             body: JSON.stringify(queryparams),
-            headers: {"Content-type": "application/json; charset=UTF-8"}
-
+            headers: {
+                "Content-Type": "application/json; charset=UTF-8",
+                "X-CSRFToken": csrftoken
+            },
+            credentials: "include"
         })).text();
 
+        // var html = await(await fetch("/login")).text();
+
+        // document.body.innerHTML=html;
+
         
-        if(response =="SUCCESS"){
+        // if(response =="SUCCESS"){
 
-            window.location = "./dashboard"
+        //     window.location = "./dashboard"
 
-        }
+        // }
 
-        window.location = "./dashboard"
+        // window.location = "./dashboard"
         
 
     }
@@ -125,5 +149,7 @@ class loginForm {
     fetchSignUp(){
 
     }
+
+
 
 }

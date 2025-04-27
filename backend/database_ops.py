@@ -6,9 +6,7 @@ def connect_database(dbPath):
     import sqlite3
     try:
         connection = sqlite3.connect(dbPath)
-        cursor = connection.cursor()
-        
-        return cursor
+        return connection
     except sqlite3.Error as e:
         code = e.sqlite_errorcode
         name = e.sqlite_errorname
@@ -21,7 +19,8 @@ def connect_database(dbPath):
 # in case of creation - returns True if there is no database-row with the given username
 # in case of login - returns True if there is a database-row with given username and password-hash
 def validate(dbPath, username, password, switch):
-    cursor = connect_database(dbPath)
+    connection = connect_database(dbPath)
+    cursor = connection.cursor()
     if switch == "user_creation":
         cursor.execute("SELECT user_name FROM user")
         rows = cursor.fetchall()
@@ -29,6 +28,7 @@ def validate(dbPath, username, password, switch):
             if row[0] == username:
                 return False
         
+        connection.close()
         return True
         
     elif switch == "user_login":
@@ -38,6 +38,7 @@ def validate(dbPath, username, password, switch):
             if row[0] == username and row[1] == password:
                 return True
         
+        connection.close()
         return False
             
 # Add-User Module
@@ -45,15 +46,20 @@ def validate(dbPath, username, password, switch):
 # when called will first validate that the username isn't taken already
 # will then create a new database entry with an incremented ID and the username and password given
 def add_user(dbPath, username, password):
-    cursor = connect_database(dbPath)
+    connection = connect_database(dbPath)
+    cursor = connection.cursor()
+    
     if validate(dbPath, username, password, "user_creation") == False:
+        connection.close()
         return 1
     else:
+        print('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
         # fetchone() always returns a tuple, therefore we need to get the first index
         # of that tuple and increment it by 1
         uID = cursor.execute("SELECT MAX(ID) FROM user").fetchone()[0] + 1
-        cursor.execute(f"""INSERT INTO user(ID, user_name, password_hash, elo)
-                          VALUES {uID}, {username}, {password}, 0""")
+        print(f"id: {uID}\nuser_name: {username}\npassword: {password}")
+        cursor.execute("INSERT INTO user(ID, user_name, password_hash, elo) VALUES (?, ?, ?, ?)", (uID, username, password, 0))
+        connection.close()
         return 0
 
 
