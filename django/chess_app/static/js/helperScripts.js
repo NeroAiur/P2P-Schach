@@ -1,9 +1,12 @@
+
+//Applies css styles "attrs" in form JSON to element "el".
 export function setAttributes(el, attrs) {
 
     Object.keys(attrs).forEach(key => el.setAttribute(key, attrs[key]));
 
 }
 
+//Creates and appends HTML element
 export function setUpHTML(type, attributes, parent) {
 
     let html = document.createElement(type);
@@ -36,9 +39,16 @@ export function cleanInput(input) {
 
 }
 
-export function hash(input) {
+export async function hash(input) {
 
-    hashedInput = digest("SHA-256", input)
+    const encoder = new TextEncoder();
+    const data = encoder.encode(input); 
+
+    const byteArray = await window.crypto.subtle.digest("SHA-256", data)
+
+    const hashedInput = new Int32Array(byteArray);
+
+    console.log(hashedInput)
 
     return hashedInput
 

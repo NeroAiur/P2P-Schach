@@ -1,19 +1,33 @@
+@font-face {
+    font-family: "95";
+    src:
+      url("./fonts/w95fa.woff2") format("woff2"),
+      url("./fonts/w95fa.woff") format("woff");
+    font-weight: normal;
+    font-style: normal;
+}
+  
+
 :root{
     --headerHeight: 150px;
     --footerHeight: 100px;
     --sidebarWidth: 200px;
     --contentPadding: 20px;
+    --doublePadding: calc(var(--contentPadding) * 2);
     --contentPaddingXL: 100px;
     --contentPaddingXXL: 150px;
     --spacingMargin: 100px 250px 100px 250px;
-    --font-size: 12pt;
-    --font-family:'Zilla Slab', Helvetica, sans-serif;
-    --colorMain: #0e7700;
-    --colorAccent1: #009673;
-    --colorAccent2: #d30070;
-    --colorText1:#996100;
-    --colorText2:#E39817;
-    --colorBackground: #dadada;
+    --font-size: 36pt;
+    --font-family:"95", serif;
+    --colorMain: #200034;
+    --colorAccent1: #56008c;
+    --colorAccent2: #4c0050;
+    --colorSignal: #a80054;
+    --colorSignalHigh: #d8006c;
+    --colorBoardDark: #500028;
+    --colorText1:#f2f2f2;
+    --colorText2:#797979;
+    --colorBackground: #f2f2f2;
     
 }
 html{
@@ -24,12 +38,37 @@ html{
 body{
     display: flex;
     align-items: stretch;
+    justify-content: center;
+
     height: 100%;
     width: 100%;
     margin: 0px;
-    background: #dadada;
+
     font-family: var(--font-family);
     font-size: var(--font-size);
+    color: var(--colorText1);
+
+    background: url(../Chesspieces/SVG/Background.svg) center no-repeat fixed;
+    background-size: cover;
+}
+
+p{
+    height: fit-content;
+    margin: 0px;
+}
+input{
+
+    font-family: var(--font-family);
+    font-size: var(--font-size);
+
+}
+
+input::placeholder{
+
+    font-family: var(--font-family);
+    font-size: var(--font-size);
+    color: var(--colorText2);
+
 }
 
 .wrapperXL{
@@ -37,9 +76,11 @@ body{
     flex-direction: column;
     align-items: center;
     justify-content: center;
+
     height: auto;
     width: 100%;
-    margin: 100px 0px 100px 250px;
+    margin: var(--spacingMargin);
+
     background: #111111;
 }
 
@@ -48,123 +89,199 @@ body{
     flex-direction: row;
     align-items: stretch;
     justify-content: stretch;
+
     height: auto;
     width: 100%;
     margin: var(--spacingMargin);
-    background: #111111;
 }
 
 .wrapperL{
     display: flex;
     align-items: center;
-    align-self:flex-start;
-    justify-content: center;
-    height: 50%;
+    align-self:stretch;
+    justify-content: start;
+    flex-direction: column;
+
+    height: auto;
     width: 100%;
-    background: #111111;
 }
 
 .wrapperS {
     display: flex;
-    align-items: flex-end;
-    align-self:flex-end;
-    justify-content: flex-end;
-    height: 5%;
-    width:auto;
-    margin: var(--contentPadding);
+    align-items: stretch;
+    justify-content: stretch;
 
+    height: calc(50% - var(--doublePadding));
+    width: 100%;
+
+}
+
+.banner{
+    display:flex;
+    align-items: center;
+    flex-direction: row;
+
+    height: auto;
+    width: auto;
+    padding: var(--contentPadding);
+
+    background-color: var(--colorAccent1);
 }
 
 .loginForm{
     display: flex;
-    align-content: space-around;
+    align-self: center;
     flex-direction: column;
+
     height: 60%;
     width: 30%;
-    padding: var(--contentPaddingXXL);
-    background: #FFFFFF;
+
+    background: var(--colorMain);
 }
 
 .textInput{
-    margin: var(--contentPadding);
-}
-
-.inputLabel {
+    height: 50px;
+    width: auto;
     margin: var(--contentPadding);
 }
 
 .loginButton {
+    align-self: center;
+
+    height: auto;
+    width: 50%;
     margin: var(--contentPadding);
+
+    color: var(--colorText1);
+
+    background-color: var(--colorSignal);
+    
+    border: none;
+}
+
+.loginButton:hover{
+    background-color: var(--colorSignalHigh);
 }
 
 .roomBrowser{
-    background: #FFFFFF;
     display: flex;
     flex-direction: column;
-    align-self: flex-start;
-    width: 100%;
+    align-self: stretch;
+
+    width: auto;
     height: 50%;
+    margin: var(--contentPadding);
+
+    background: var(--colorMain);
+
 }
 
 .ranking{
-    background: #555555;
-    width: 100%;
-    height: 100%;
-}
+    display: flex;
+    flex-direction: column;
+    align-self: stretch;
 
-.sidebar{
-    background:#009673;
-    height: 100%;
-    width:10%;
+    width: 100%;
+    height: auto;
+    margin: var(--contentPadding);
+
+    background-color: var(--colorMain);
+
 }
 
 .friendbar {
-    background:#009673;
     height: auto;
     width: 30%;
-    margin: 100px 250px 100px 0px;
-    padding: var(--contentPadding);
+    margin: var(--contentPadding);
+
+    background:var(--colorMain);
 }
 
 .createRoom {
-    width: 50px;
+    margin-left: auto;
+
+    width: 300px;
     height: 100%;
+
+    color: var(--colorText1);
+    background-color: var(--colorSignal);
+    
+    border:none;
+}
+
+.createRoom:hover{
+    background-color: var(--colorSignalHigh);
 }
 
 .lobbyList {
-    height: 100%;
+    height: auto;
     width: auto;
+    margin: 0 0 var(--contentPadding) 0;
+
     overflow: auto;
 }
 
+.list{
+    height: auto;
+    width: auto;
+
+    align-self:stretch;
+
+    overflow-y: scroll;
+}
+
 .lobbyCard {
-    height: 100px;
+    height: 150px;
     width: auto;
     margin: var(--contentPadding);
-    border: 1px solid red;
+
+    background-color: var(--colorAccent2);
 }
 
 .rankingCard {
-    height: 50px;
+    height: 75px;
     width: auto;
-    margin: 0 var(--contentPadding) 0 var(--contentPadding);
-    border: 1px solid red;
+    margin:  var(--contentPadding);
+
+    background-color: var(--colorAccent2);
 }
 
 .gameBoard {
-    height:100%;
-    align-self: flex-start;
-    background: rebeccapurple;
+    align-self: stretch;
+
+    height:auto;
+    margin: var(--contentPadding)
 }
 
 .friendCard {
     width:auto;
     height: 100px;
-    border: 1px solid black;
     padding: var(--contentPadding);
+
+    background-color: var(--colorAccent2);
 }
 
 .gameInfo {
-    background: #996100;
-    
+    height: auto;
+    width: 0px;
+    margin: var(--contentPadding);
+
+    background: var(--colorMain);
+}
+
+.textBox {
+    display: flex;
+    height: fit-content;
+    width: auto;
+    align-items: center;
+    justify-content: center;
+    margin: var(--contentPaddingXL);
+}
+
+.timer {
+    display: flex;
+    height: fit-content;
+    width: auto;
+    align-items: center;
+    justify-content: center;
 }
