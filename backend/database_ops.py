@@ -61,6 +61,20 @@ def add_user(dbPath, username, password):
         return 0
 
 
+# User-Login Module
+# --------------------------
+# when called will check if credentials for login are correct
+# returns 0 if they are correct
+# returns 1 if they are false
+def user_login(dbPath, username, password):
+    connection = connect_database(dbPath)
+    cursor = connection.cursor()
+    if validate(dbPath, username, password, "user_login") == True:
+        return 0
+    else:
+        return 1
+
+
 # Testing
 # --------------------------
 # will only be called if you run this file directly
