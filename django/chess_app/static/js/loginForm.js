@@ -19,21 +19,20 @@ class loginForm {
 
         this.parent = parent;
 
+        this.children = Array(8)
+
         this.registerLogin();
 
     }
 
     clearChildren(){
 
-        var children = this.parent.children;
+        this.children.forEach((child) => {
 
-        const iterations =children.length;
-
-        for(let i=0; i<iterations;i++){
-
-            children[0].remove();
-
-        }
+            child.remove();
+            child= null;
+            
+        })
 
     }
 
@@ -41,21 +40,23 @@ class loginForm {
 
         this.clearChildren();
 
-        var label = setUpHTML("label", {"for":"email", class:"inputLabel"}, this.parent);
-        this.eRef = setUpHTML("input",{"type":"text","name":"email",class:"textInput", id:"emailInput"},this.parent);
-        var txt = document.createTextNode("Email: ");
-        label.appendChild(txt);
+        this.eRef = setUpHTML("input",{"type":"text","name":"username",class:"textInput", id:"usernameInput", placeholder: "Username..."},this.parent);
 
-        label = setUpHTML("label", {"for":"password", class:"inputLabel"}, this.parent);
-        this.pwRef = setUpHTML("input",{"type":"password","name":"password", class:"textInput", id:"pwInput"},this.parent);
-        txt = document.createTextNode("Passwort: ");
-        label.appendChild(txt);
+        this.children.push(this.eRef);
+
+        this.pwRef = setUpHTML("input",{"type":"password","name":"password", class:"textInput", id:"pwInput", placeholder: "Password..."},this.parent);
+
+        this.children.push(this.pwRef);
 
         var button = setUpHTML("input", {type:"button", class:"loginButton", id:"signInButton", value: "Log in!"},this.parent);
         button.addEventListener("click", this.fetchLogin.bind(this))
 
+        this.children.push(button);
+
         button = setUpHTML("input", {type:"button", class:"loginButton", id:"registerButton", value: "Register here!"},this.parent);
         button.addEventListener("click", this.registerRegister.bind(this))
+
+        this.children.push(button);
 
     }
 
@@ -63,20 +64,9 @@ class loginForm {
 
         this.clearChildren();
         
-        var label = setUpHTML("label", {"for":"username", class:"inputLabel"}, this.parent);
-        this.eRef = setUpHTML("input",{"type":"text","name":"username",class:"textInput", id:"usernameInput"},this.parent);
-        var txt = document.createTextNode("Nutzername: ");
-        label.appendChild(txt);
+        this.eRef = setUpHTML("input",{"type":"text","name":"username",class:"textInput", id:"usernameInput", placeholder:"Username..."},this.parent);
 
-        var label = setUpHTML("label", {"for":"email", class:"inputLabel"}, this.parent);
-        this.eRef = setUpHTML("input",{"type":"text","name":"email",class:"textInput", id:"emailInput"},this.parent);
-        var txt = document.createTextNode("Email: ");
-        label.appendChild(txt);
-
-        label = setUpHTML("label", {"for":"password", class:"inputLabel"}, this.parent);
-        this.pwRef = setUpHTML("input",{"type":"password","name":"password", class:"textInput", id:"pwInput"}, this.parent);
-        txt = document.createTextNode("Passwort: ");
-        label.appendChild(txt);
+        this.pwRef = setUpHTML("input",{"type":"password","name":"password", class:"textInput", id:"pwInput", placeholder: "Password..."}, this.parent);
 
         var button = setUpHTML("input", {type:"button", class:"loginButton", id:"signUpButton", value:"Register!"}, this.parent);
         button.addEventListener("click", this.fetchSignUp.bind(this))
@@ -99,12 +89,16 @@ class loginForm {
         var password = this.pwRef.value;
 
         if(password.length<8){
-            //Password length to short
+            //Password length t o short
             return
         }
 
         email= cleanInput(email);
         password = cleanInput(password)
+
+        password = await hash(password);
+
+        console.log(password)
 
         const queryparams = {
             email: email,

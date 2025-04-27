@@ -15,9 +15,15 @@ export class gamePiece {
         this.side = side;
         this.possibleMoves = possibleMoves;
 
+        this.cssVar = window.getComputedStyle(document.documentElement);
+
         this.listener = Array(3)
 
         this.svg = setUpSVG("image", { href: svg, height: 100, width: 100, x: pos.y * 100, y: pos.x * 100, "user-select": "none" }, this.parent);
+
+    }
+
+    startListen(){
 
         if (this.side == this.game.side) {
 
@@ -92,8 +98,8 @@ export class gamePiece {
                     const svg = this.game.gameTiles[tile.x][tile.y];
 
                     if (((tile.y % 2) == 1 && (tile.x % 2) == 1) || ((tile.y % 2) == 0 && (tile.x % 2) == 0)) {
-                        setAttributes(svg, { fill: "#FFFFFF" })
-                    } else { setAttributes(svg, { fill: "#DDDDDD" }) }
+                        setAttributes(svg, { fill: this.cssVar.getPropertyValue("--colorSignal") })
+                    } else { setAttributes(svg, { fill: this.cssVar.getPropertyValue("--colorBoardDark") }) }
                 })
 
                 return

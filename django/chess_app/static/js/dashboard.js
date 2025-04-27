@@ -34,7 +34,7 @@ class lobbyBrowser {
     }
 
     registerLobbyNav(){
-        const navBar = setUpHTML("div",{class:"wrapperS"},this.Ref);
+        const navBar = document.getElementById("roomBrowserBanner")
         const createButton = setUpHTML("input", {type:"button", class:"createRoom", id:"createRoom", value:"Create Room!"}, navBar);
 
         createButton.addEventListener("click", () => {
@@ -43,7 +43,7 @@ class lobbyBrowser {
 
         })
 
-        const lobbyList = setUpHTML("div", {class: "lobbyList", id:"lobbyList"}, this.Ref);
+        this.lobbyList = setUpHTML("div", {class: "lobbyList", id:"lobbyList"}, this.Ref);
 
         for(let i=0; i<20; i++){
             setUpHTML("div",{class:"lobbyCard"}, lobbyList);
@@ -71,10 +71,12 @@ class rankingBoard {
     }
 
     async fetchRanking(){
-        const response = [1,2,3,4];
+        const response = [1,2,3,4,5];
+
+        this.rankingList = setUpHTML("div", {class: "list", id:"rankingList"}, this.ref);
 
         response.forEach((ranks)=> {
-            setUpHTML("div",{class:"rankingCard"}, this.ref);
+            setUpHTML("div",{class:"rankingCard"}, this.rankingList);
         })
     }
 }
@@ -94,9 +96,11 @@ class friendList {
     async fetchFriends(){
         const response =["Carl", "Peter", "Flötenmann"]
 
+        this.friendList = setUpHTML("div", {class: "list", id:"friendList"}, this.ref);
+
         response.forEach((friend)=>{
 
-            const card = setUpHTML("div",{class:"friendCard", id:"friendCard"},this.ref)
+            const card = setUpHTML("div",{class:"friendCard", id:"friendCard"},this.friendList)
 
             const txt = document.createTextNode(friend);
 

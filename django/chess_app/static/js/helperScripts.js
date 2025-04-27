@@ -39,9 +39,16 @@ export function cleanInput(input) {
 
 }
 
-export function hash(input) {
+export async function hash(input) {
 
-    hashedInput = digest("SHA-256", input)
+    const encoder = new TextEncoder();
+    const data = encoder.encode(input); 
+
+    const byteArray = await window.crypto.subtle.digest("SHA-256", data)
+
+    const hashedInput = new Int32Array(byteArray);
+
+    console.log(hashedInput)
 
     return hashedInput
 
