@@ -18,7 +18,7 @@ def connect_database(dbPath):
 # switch is either "user_creation" or "user_login"
 # in case of creation - returns True if there is no database-row with the given username
 # in case of login - returns True if there is a database-row with given username and password-hash
-def validate(dbPath, username, password, switch):
+def __validate(dbPath, username, password, switch):
     connection = connect_database(dbPath)
     cursor = connection.cursor()
     if switch == "user_creation":
@@ -43,12 +43,12 @@ def validate(dbPath, username, password, switch):
             
 # Add-User Module
 # --------------------------
-# when called will first validate that the username isn't taken already
+# when called will first __validate that the username isn't taken already
 # will then create a new database entry with an incremented ID and the username and password given
 def add_user(dbPath, username, password):
     connection = connect_database(dbPath)
     cursor = connection.cursor()
-    if validate(dbPath, username, password, "user_creation") == False:
+    if __validate(dbPath, username, password, "user_creation") == False:
         connection.close()
         return 1
     else:
@@ -69,7 +69,7 @@ def add_user(dbPath, username, password):
 def user_login(dbPath, username, password):
     connection = connect_database(dbPath)
     cursor = connection.cursor()
-    if validate(dbPath, username, password, "user_login") == True:
+    if __validate(dbPath, username, password, "user_login") == True:
         return 0
     else:
         return 1
@@ -84,4 +84,4 @@ if __name__ == "__main__":
     TESTUSER = "testomana"
     TESTPW = "b3uz21r3tw904r"
 
-    print(validate(TESTPATH, TESTUSER, TESTPW, "user_login"))
+    print(__validate(TESTPATH, TESTUSER, TESTPW, "user_login"))
