@@ -67,12 +67,21 @@ def add_user(dbPath, username, password):
 # returns 0 if they are correct
 # returns 1 if they are false
 def user_login(dbPath, username, password):
-    connection = connect_database(dbPath)
-    cursor = connection.cursor()
     if __validate(dbPath, username, password, "user_login") == True:
         return 0
     else:
         return 1
+ 
+
+def update_score(dbPath, username, score_to_add):
+    connection = connect_database(dbPath)
+    cursor = connection.cursor()
+    current_score = cursor.execute(f"SELECT elo FROM user WHERE user_name={username}")
+    new_score = current_score + score_to_add
+    
+    cursor.execute(f"""UPDATE user SET elo={new_score} WHERE user_name={username}""")
+    connection.close()
+    return 0
 
 
 # Testing
@@ -84,4 +93,4 @@ if __name__ == "__main__":
     TESTUSER = "testomana"
     TESTPW = "b3uz21r3tw904r"
 
-    print(__validate(TESTPATH, TESTUSER, TESTPW, "user_login"))
+    update_score(TESTPATH, TESTUSER)
