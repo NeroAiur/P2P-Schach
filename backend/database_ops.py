@@ -53,12 +53,11 @@ def add_user(dbPath, username, password):
         connection.close()
         return 1
     else:
-        print('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
         # fetchone() always returns a tuple, therefore we need to get the first index
-        # of that tuple and increment it by 1
         uID = cursor.execute("SELECT MAX(ID) FROM user").fetchone()[0] + 1
         print(f"id: {uID}\nuser_name: {username}\npassword: {password}")
         cursor.execute("INSERT INTO user(ID, user_name, password_hash, elo) VALUES (?, ?, ?, ?)", (uID, username, password, 0))
+        connection.commit()
         connection.close()
         return 0
 
