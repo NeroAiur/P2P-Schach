@@ -66,13 +66,21 @@ class loginForm {
         
         this.eRef = setUpHTML("input",{"type":"text","name":"username",class:"textInput", id:"usernameInput", placeholder:"Username..."},this.parent);
 
+        this.children.push(this.eRef);
+
         this.pwRef = setUpHTML("input",{"type":"password","name":"password", class:"textInput", id:"pwInput", placeholder: "Password..."}, this.parent);
+
+        this.children.push(this.pwRef);
 
         var button = setUpHTML("input", {type:"button", class:"loginButton", id:"signUpButton", value:"Register!"}, this.parent);
         button.addEventListener("click", this.fetchSignUp.bind(this))
 
+        this.children.push(button);
+
         button = setUpHTML("input", {type:"button", class:"loginButton", id:"loginButton", value:"Already a User? Sign in!"},this.parent);
         button.addEventListener("click", this.registerLogin.bind(this))
+
+        this.children.push(button);
 
     }
 
@@ -89,14 +97,14 @@ class loginForm {
         var password = this.pwRef.value;
 
         if(password.length<8){
-            //Password length t o short
+            //Password length too short
             return
         }
 
         email= cleanInput(email);
         password = cleanInput(password)
 
-        password = await hash(password);
+        //password = await hash(password);
 
         console.log(password)
 
