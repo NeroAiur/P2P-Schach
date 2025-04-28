@@ -6,7 +6,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../'
 
 from django.shortcuts import render, redirect
 from django.views.generic.base import TemplateView
-from backend.database_ops import add_user, get_uID
+from backend.database_ops import add_user, get_uID, user_login
 from django.views.decorators.csrf import csrf_exempt
 from django.urls import reverse
 
