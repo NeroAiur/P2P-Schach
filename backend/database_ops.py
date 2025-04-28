@@ -62,6 +62,15 @@ def add_user(dbPath, username, password):
         connection.close()
         return 0
 
+def get_uID(dbPath, username, password):
+    connection = connect_database(dbPath)
+    cursor = connection.cursor()
+    cursor.execute("SELECT ID, user_name, password_hash FROM user")
+    rows = cursor.fetchall()
+    
+    for row in rows:
+        if row[1] == username and row[2] == password:
+            return row[0]
 
 # Testing
 # --------------------------

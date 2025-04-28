@@ -1,12 +1,14 @@
 import sys
 import os
 import json
+import hashlib
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 
 from django.shortcuts import render, redirect
 from django.views.generic.base import TemplateView
-from backend.database_ops import add_user
+from backend.database_ops import add_user, get_uID
 from django.views.decorators.csrf import csrf_exempt
+from django.urls import reverse
 
 
 def index(request):
@@ -15,12 +17,13 @@ def index(request):
 # PSEUDOCODE/IDEE
 @csrf_exempt
 def send_login_data_to_login_function(request):
-    body = json.loads(request.body)
-    username = body.get('email')
-    password = body.get('password')
+    username = request.POST.get('username')
+    password = request.POST.get('password')
     add_user("../db/user.db", username, password)
-    # return redirect("/dashboard")
-    return render(request, "base.html")
+    uID = get_uID("../db/user.db", username, password)
+
+    return redirect(reverse('chess_app:dashboard', kwargs={'uID' : uID}))
+    # return render(request, "base.html")
 
 class GameView(TemplateView):
     template_name = "chessboard.html"
