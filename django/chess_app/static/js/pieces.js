@@ -89,7 +89,7 @@ export class gamePiece {
 
                 const csrftoken = getCookie('csrftoken');
 
-                await fetch("/login", {
+                await fetch("/", {
                     method: "POST",
                     body: JSON.stringify(queryparams),
                     headers: {

@@ -128,6 +128,10 @@ input::placeholder{
     background-color: var(--colorAccent1);
 }
 
+.hiddenInput{
+    display: none
+}
+
 .loginForm{
     display: flex;
     align-self: center;
@@ -291,3 +295,4 @@ input::placeholder{
     fill: var(--colorText1);
     
 }
+
