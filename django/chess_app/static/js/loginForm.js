@@ -122,9 +122,6 @@ class loginForm {
         };
 
         const csrftoken = this.getCookie('csrftoken');
-        const csrftoken = this.getCookie('csrftoken');
-
-        var response = await fetch("./login", {
 
         var response = await (await fetch("/login", {
             method: "POST",
