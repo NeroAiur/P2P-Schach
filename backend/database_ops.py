@@ -48,18 +48,19 @@ def __validate(dbPath, username, password, switch):
 def add_user(dbPath, username, password):
     connection = connect_database(dbPath)
     cursor = connection.cursor()
+    
     if __validate(dbPath, username, password, "user_creation") == False:
         connection.close()
         return 1
     else:
         # fetchone() always returns a tuple, therefore we need to get the first index
-        # of that tuple and increment it by 1
         uID = cursor.execute("SELECT MAX(ID) FROM user").fetchone()[0] + 1
-        cursor.execute(f"""INSERT INTO user(ID, user_name, password_hash, elo)
-                          VALUES {uID}, {username}, {password}, 0""")
-        connection.close()
-        return 0
+        cursor.execute("INSERT INTO user(ID, user_name, password_hash, elo) VALUES (?, ?, ?, ?)", (uID, username, password, 0))
 
+        connection.commit()
+        connection.close()
+
+        return 0
 
 # User-Login Module
 # --------------------------
@@ -71,6 +72,17 @@ def user_login(dbPath, username, password):
         return 0
     else:
         return 1
+    
+
+def get_uID(dbPath, username, password):
+    connection = connect_database(dbPath)
+    cursor = connection.cursor()
+    cursor.execute("SELECT ID, user_name, password_hash FROM user")
+    rows = cursor.fetchall()
+    
+    for row in rows:
+        if row[1] == username and row[2] == password:
+            return row[0]
  
 
 def update_score(dbPath, username, score_to_add):
