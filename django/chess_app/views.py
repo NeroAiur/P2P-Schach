@@ -16,14 +16,28 @@ def index(request):
 
 # PSEUDOCODE/IDEE
 @csrf_exempt
-def send_login_data_to_login_function(request):
+def register_user(request):
     username = request.POST.get('username')
     password = request.POST.get('password')
     add_user("../db/user.db", username, password)
     uID = get_uID("../db/user.db", username, password)
 
-    return redirect(reverse('chess_app:dashboard', kwargs={'uID' : uID}))
-    # return render(request, "base.html")
+    return redirect('dashboard', uID=uID)
+
+@csrf_exempt
+def login_user(request):
+    username = request.POST.get('username')
+    password = request.POST.get('password')
+    user_login("../db/user.db", username, password)
+    uID = get_uID("../db/user.db", username, password)
+
+    return redirect('dashboard', uID=uID)
+
+def render_dashboard(request, uID):
+    context = {
+        'uID' : uID,
+    }
+    return render(request, "dashboard.html", context)
 
 class GameView(TemplateView):
     template_name = "chessboard.html"
@@ -31,8 +45,6 @@ class GameView(TemplateView):
 class DashboardView(TemplateView):
     template_name = "dashboard.html"
 
-def render_dashboard(request):
-    return render(request, "dashboard.html")
 
 # class ProfileView(TemplateView):
 #     template_name = "home.html"

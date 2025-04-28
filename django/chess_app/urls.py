@@ -7,10 +7,11 @@ urlpatterns = [
     # IDEE, nicht finaler Code
 
     path('game',         GameView.as_view(),       name="game"),
-    path('dashboard',       render_dashboard,    name='dashboard'),
+    path('dashboard_<uID>',       render_dashboard,    name='dashboard'),
     # path('profile/<ID>', ProfileView.as_view(),    name="profile"),
 
-    path('login', send_login_data_to_login_function, name="login"),
+    path('register', register_user, name="register"),
+    path('login', login_user, name="login"),
     # path('game/<room_<room_ID>/send_gamestate', send_gamestate,                    name="send_gamestate"),
     # path('profile/<ID>/update_<elo>',          change_profile_name(),             name="change_elo"),
 

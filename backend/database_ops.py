@@ -39,7 +39,7 @@ def validate(dbPath, username, password, switch):
                 return True
         
         connection.close()
-        return False
+        return False 
             
 # Add-User Module
 # --------------------------
