@@ -285,3 +285,9 @@ input::placeholder{
     align-items: center;
     justify-content: center;
 }
+
+.boardLettering{
+    font-size: 12pt;
+    fill: var(--colorText1);
+    
+}

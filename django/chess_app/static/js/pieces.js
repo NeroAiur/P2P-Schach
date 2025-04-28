@@ -1,4 +1,4 @@
-import { setAttributes, setUpHTML, setUpSVG } from "./helperScripts.js";
+import { setAttributes, setUpHTML, setUpSVG, getCookie, encodeRow } from "./helperScripts.js";
 
 export class gamePiece {
 
@@ -39,7 +39,7 @@ export class gamePiece {
         this.possibleMoves.forEach((tile) => {
 
             const svg = this.game.gameTiles[tile.x][tile.y];
-            setAttributes(svg, { fill: "#BF3B91" })
+            setAttributes(svg, { fill: this.cssVar.getPropertyValue("--colorSignalHigh") })
 
         })
 
@@ -54,13 +54,11 @@ export class gamePiece {
     }
 
     dragPiece(event) {
-        const x = this.svg.getAttribute("x");
 
+        const x = this.svg.getAttribute("x");
         const y = this.svg.getAttribute("y");
 
         const scalar = 800 / this.game.ref.clientHeight;
-
-        console.log(scalar)
 
         setAttributes(this.svg, { x: parseInt(x) + parseInt(event.movementX) * scalar, y: parseInt(y) + parseInt(event.movementY) * scalar });
         
@@ -69,11 +67,9 @@ export class gamePiece {
     endDrag() {
 
         const x = parseInt(this.svg.getAttribute("y")) + 50;
-
         const y = parseInt(this.svg.getAttribute("x")) + 50;
 
-
-        this.possibleMoves.forEach((tile) => {
+        this.possibleMoves.forEach(async (tile) => {
 
             const tileLowerX = tile.x * 100;
             const tileUpperX = (tile.x + 1) * 100;
@@ -82,11 +78,27 @@ export class gamePiece {
             const tileUpperY = (tile.y + 1) * 100;
 
             if ((tileLowerX <= x) && (x <= tileUpperX) && (tileLowerY < y) && (y < tileUpperY)) {
-
-                console.log({ x: x, y: y, LX: tileLowerX, UX: tileUpperX, LY: tileLowerY, UY: tileUpperY })
-
                 //send Move
+                const queryparams = {
+                    move: encodeRow(this.pos.y) + this.pos.x  + " to " + encodeRow(tile.y) + tile.x,
+                };
+
+                console.log(queryparams);
+
                 this.pos = tile;
+
+                const csrftoken = getCookie('csrftoken');
+
+                await fetch("/login", {
+                    method: "POST",
+                    body: JSON.stringify(queryparams),
+                    headers: {
+                        "Content-Type": "application/json; charset=UTF-8",
+                        "X-CSRFToken": csrftoken
+                    },
+                    credentials: "include"
+                });
+
 
                 setAttributes(this.svg, { x: this.pos.y * 100, y: this.pos.x * 100 })
 
