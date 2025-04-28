@@ -1,29 +1,38 @@
 import sys
 import os
+import json
+import hashlib
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic.base import TemplateView
-from backend.database_ops import add_user
+from backend.database_ops import add_user, get_uID
+from django.views.decorators.csrf import csrf_exempt
+from django.urls import reverse
 
 
 def index(request):
     return render(request, "index.html")
 
 # PSEUDOCODE/IDEE
-# def send_login_data_to_login_function(request):
-#     username = request.GET.get('username')
-#     password = request.GET.get('password')
+@csrf_exempt
+def send_login_data_to_login_function(request):
+    username = request.POST.get('username')
+    password = request.POST.get('password')
+    add_user("../db/user.db", username, password)
+    uID = get_uID("../db/user.db", username, password)
 
-#     # nicht ganz sicher, was dbpath ist
-#     add_user("db/user.db", username, password)
-#     return render(request, "base.html")
+    return redirect(reverse('chess_app:dashboard', kwargs={'uID' : uID}))
+    # return render(request, "base.html")
 
 class GameView(TemplateView):
-    template_name = "game.html"
+    template_name = "chessboard.html"
 
-class ScoreboardView(TemplateView):
-    template_name = "scoreboard.html"
+class DashboardView(TemplateView):
+    template_name = "dashboard.html"
+
+def render_dashboard(request):
+    return render(request, "dashboard.html")
 
 # class ProfileView(TemplateView):
 #     template_name = "home.html"

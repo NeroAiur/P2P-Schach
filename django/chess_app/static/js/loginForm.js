@@ -1,4 +1,4 @@
-import { setAttributes, setUpHTML } from "./helperScripts.js";
+import { setAttributes, setUpHTML, cleanInput, hash, getCookie } from "./helperScripts.js";
 
 
 window.onload = () =>{
@@ -7,6 +7,8 @@ window.onload = () =>{
     let login = new loginForm(loginDiv);
 
 }
+
+/*Sets up HTML elements for either login or register form and appends necessary event listeners. Handles also POST requests to backend */
 
 class loginForm {
 
@@ -17,21 +19,20 @@ class loginForm {
 
         this.parent = parent;
 
+        this.children = Array(8)
+
         this.registerLogin();
 
     }
 
     clearChildren(){
 
-        var children = this.parent.children;
+        this.children.forEach((child) => {
 
-        const iterations =children.length;
-
-        for(let i=0; i<iterations;i++){
-
-            children[0].remove();
-
-        }
+            child.remove();
+            child= null;
+            
+        })
 
     }
 
@@ -39,21 +40,23 @@ class loginForm {
 
         this.clearChildren();
 
-        var label = setUpHTML("label", {"for":"email", class:"inputLabel"}, this.parent);
-        this.eRef = setUpHTML("input",{"type":"text","name":"email",class:"textInput", id:"emailInput"},this.parent);
-        var txt = document.createTextNode("Email: ");
-        label.appendChild(txt);
+        this.eRef = setUpHTML("input",{"type":"text","name":"username",class:"textInput", id:"usernameInput", placeholder: "Username..."},this.parent);
 
-        label = setUpHTML("label", {"for":"password", class:"inputLabel"}, this.parent);
-        this.pwRef = setUpHTML("input",{"type":"password","name":"password", class:"textInput", id:"pwInput"},this.parent);
-        txt = document.createTextNode("Passwort: ");
-        label.appendChild(txt);
+        this.children.push(this.eRef);
 
-        var button = setUpHTML("input", {type:"button", class:"loginButton", id:"signInButton"},this.parent);
+        this.pwRef = setUpHTML("input",{"type":"password","name":"password", class:"textInput", id:"pwInput", placeholder: "Password..."},this.parent);
+
+        this.children.push(this.pwRef);
+
+        var button = setUpHTML("input", {type:"button", class:"loginButton", id:"signInButton", value: "Log in!"},this.parent);
         button.addEventListener("click", this.fetchLogin.bind(this))
 
-        button = setUpHTML("input", {type:"button", class:"loginButton", id:"registerButton"},this.parent);
+        this.children.push(button);
+
+        button = setUpHTML("input", {type:"button", class:"loginButton", id:"registerButton", value: "Register here!"},this.parent);
         button.addEventListener("click", this.registerRegister.bind(this))
+
+        this.children.push(button);
 
     }
 
@@ -61,51 +64,64 @@ class loginForm {
 
         this.clearChildren();
         
-        var label = setUpHTML("label", {"for":"username", class:"inputLabel"}, this.parent);
-        this.eRef = setUpHTML("input",{"type":"text","name":"username",class:"textInput", id:"usernameInput"},this.parent);
-        var txt = document.createTextNode("Nutzername: ");
-        label.appendChild(txt);
+        this.eRef = setUpHTML("input",{"type":"text","name":"username",class:"textInput", id:"usernameInput", placeholder:"Username..."},this.parent);
 
-        var label = setUpHTML("label", {"for":"email", class:"inputLabel"}, this.parent);
-        this.eRef = setUpHTML("input",{"type":"text","name":"email",class:"textInput", id:"emailInput"},this.parent);
-        var txt = document.createTextNode("Email: ");
-        label.appendChild(txt);
+        this.children.push(this.eRef);
 
-        label = setUpHTML("label", {"for":"password", class:"inputLabel"}, this.parent);
-        this.pwRef = setUpHTML("input",{"type":"password","name":"password", class:"textInput", id:"pwInput"},this.parent);
-        txt = document.createTextNode("Passwort: ");
-        label.appendChild(txt);
+        this.pwRef = setUpHTML("input",{"type":"password","name":"password", class:"textInput", id:"pwInput", placeholder: "Password..."}, this.parent);
 
-        var button = setUpHTML("input", {type:"button", class:"loginButton", id:"signUpButton"},this.parent);
+        this.children.push(this.pwRef);
+
+        var button = setUpHTML("input", {type:"button", class:"loginButton", id:"signUpButton", value:"Register!"}, this.parent);
         button.addEventListener("click", this.fetchSignUp.bind(this))
 
-        button = setUpHTML("input", {type:"button", class:"loginButton", id:"loginButton"},this.parent);
+        this.children.push(button);
+
+        button = setUpHTML("input", {type:"button", class:"loginButton", id:"loginButton", value:"Already a User? Sign in!"},this.parent);
         button.addEventListener("click", this.registerLogin.bind(this))
+
+        this.children.push(button);
 
     }
 
+    /*Reads in Info, cleans it and hashes PW. Sends data in body as JSON:
+        {email:string, password: string}, 
+    expects 
+        {Sucess:bool, UserID: string},
+    to  /login
+    stores the ID in local Storage and navigates to dashboard*/
+
     async fetchLogin(){
 
-        const queryparams = {
-            email: this.eRef.value,
-            password:  this.pwRef.value
-        };
+        var email = this.eRef.value;
+        var password = this.pwRef.value;
 
-        var values = await (await fetch("http://127.0.0.1:5500/frontend/dashboard.html", {
+        if(password.length<8){
+            //Password length too short
+            return
+        }
 
-            method: "POST",
-            body: JSON.stringify(queryparams),
-            headers: {"Content-type": "application/json; charset=UTF-8"}
+        email= cleanInput(email);
+        password = cleanInput(password)
 
-        })).text();
+        //password = await hash(password);
 
-        var html = await (await fetch("http://127.0.0.1:5500/frontend/dashboard.html")).text();
+        console.log(password)
 
-        document.body.innerHTML=html;
+        const csrftoken = getCookie('csrftoken');
+
+        var form = setUpHTML("form",{method:"POST", action: "./login"}, document.body);
+        var element1 = setUpHTML("input", {value: email, name: "username", class:"hiddenInput"}, form); 
+        var element2 = setUpHTML("input", {value: password, name: "password", class:"hiddenInput"}, form);  
+    
+        form.submit();
+
     }
 
     fetchSignUp(){
 
     }
+
+
 
 }
