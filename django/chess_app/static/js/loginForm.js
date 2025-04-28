@@ -104,11 +104,7 @@ class loginForm {
         email= cleanInput(email);
         password = cleanInput(password)
 
-        //password = await hash(password);
-
-        console.log(password)
-
-        const csrftoken = getCookie('csrftoken');
+        password = await hash(password);
 
         var form = setUpHTML("form",{method:"POST", action: "./login"}, document.body);
         var element1 = setUpHTML("input", {value: email, name: "username", class:"hiddenInput"}, form); 
@@ -118,7 +114,26 @@ class loginForm {
 
     }
 
-    fetchSignUp(){
+    async fetchSignUp(){
+
+        var email = this.eRef.value;
+        var password = this.pwRef.value;
+
+        if(password.length<8){
+            //Password length too short
+            return
+        }
+
+        email= cleanInput(email);
+        password = cleanInput(password)
+
+        password = await hash(password);
+
+        var form = setUpHTML("form",{method:"POST", action: "./register"}, document.body);
+        var element1 = setUpHTML("input", {value: email, name: "username", class:"hiddenInput"}, form); 
+        var element2 = setUpHTML("input", {value: password, name: "password", class:"hiddenInput"}, form);  
+    
+        form.submit();
 
     }
 
