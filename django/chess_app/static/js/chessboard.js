@@ -100,10 +100,10 @@ class chessboard {
         for(let i=0; i<8; i++){
 
             var svg = setUpSVG("text", {x: i * 100 + 85, y:15, height: 100, width: 100, class:"boardLettering"}, tileGroup)
-            svg.textContent=i+1;
+            svg.textContent=encodeRow(i);
 
             svg= setUpSVG("text", {x: 5, y: i * 100 + 95, height: 100, width: 100, class:"boardLettering"}, tileGroup)
-            svg.textContent= encodeRow(i);
+            svg.textContent= i+1;
 
         }
 

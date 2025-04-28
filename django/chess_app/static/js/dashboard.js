@@ -38,7 +38,7 @@ class lobbyBrowser {
         const createButton = setUpHTML("input", {type:"button", class:"createRoom", id:"createRoom", value:"Create Room!"}, navBar);
 
         createButton.addEventListener("click", () => {
-            var form = setUpHTML("form",{method:"POST", action: "./lobby"}, document.body);
+            var form = setUpHTML("form",{method:"POST", action: "./registerLobby"}, document.body);
             var element1 = setUpHTML("input", {value: this.user, name: "userID", class:"hiddenInput"}, form); 
     
             form.submit();
@@ -68,7 +68,7 @@ class lobbyBrowser {
             const joinButton = setUpHTML("input", {type:"button", class:"createRoom", id:"joinRoom " + i, value:"Join Room!"}, this.lobbyList)
 
             joinButton.addEventListener("click", () => {
-                var form = setUpHTML("form",{method:"POST", action: "./lobby"}, document.body);
+                var form = setUpHTML("form",{method:"POST", action: lobby.endPoint}, document.body);
                 var element1 = setUpHTML("input", {value: this.user, name: "userID", class:"hiddenInput"}, form); 
         
                 form.submit();
