@@ -132,19 +132,6 @@ class loginForm {
             },
             credentials: "include"
         })).text();
-
-        // var html = await(await fetch("/login")).text();
-
-        // document.body.innerHTML=html;
-
-        
-        // if(response =="SUCCESS"){
-
-        //     window.location = "./dashboard"
-
-        // }
-
-        // window.location = "./dashboard"
         
 
     }
