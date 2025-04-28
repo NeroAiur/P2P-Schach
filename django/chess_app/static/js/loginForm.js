@@ -100,30 +100,11 @@ class loginForm {
 
         console.log(password)
 
-        const queryparams = {
-            username: email,
-            password:  password
-        };
-
         const csrftoken = getCookie('csrftoken');
-
-        /*
-        await fetch("/login", {
-            method: "POST",
-            body: JSON.stringify(queryparams),
-            headers: {
-                "Content-Type": "application/json; charset=UTF-8",
-                "X-CSRFToken": csrftoken
-            },
-            credentials: "include"
-        });
-
-        window.location = "./dashboard"
-        */
 
         var form = setUpHTML("form",{method:"POST", action: "./login"}, document.body);
         var element1 = setUpHTML("input", {value: email, name: "username", class:"hiddenInput"}, form); 
-        var element2 = setUpHTML("input", {value: password, name: "passsword", class:"hiddenInput"}, form);  
+        var element2 = setUpHTML("input", {value: password, name: "password", class:"hiddenInput"}, form);  
     
         form.submit();
 

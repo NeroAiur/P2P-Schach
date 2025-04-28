@@ -34,24 +34,47 @@ class lobbyBrowser {
     }
 
     registerLobbyNav(){
-        const navBar = document.getElementById("roomBrowserBanner")
+        const navBar = document.getElementById("roomBrowserBanner");
         const createButton = setUpHTML("input", {type:"button", class:"createRoom", id:"createRoom", value:"Create Room!"}, navBar);
 
         createButton.addEventListener("click", () => {
-
-            window.location = "./game"
-
+            var form = setUpHTML("form",{method:"POST", action: "./lobby"}, document.body);
+            var element1 = setUpHTML("input", {value: this.user, name: "userID", class:"hiddenInput"}, form); 
+    
+            form.submit();
+            
         })
 
         this.lobbyList = setUpHTML("div", {class: "lobbyList", id:"lobbyList"}, this.Ref);
 
-        for(let i=0; i<20; i++){
-            setUpHTML("div",{class:"lobbyCard"}, lobbyList);
-        }
-
     }
 
-    async fetchLobbys(){
+    async fetchLobbys() {
+
+        const csrftoken = getCookie('csrftoken');
+
+        const response = await (await fetch("/lobby", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json; charset=UTF-8",
+                "X-CSRFToken": csrftoken
+            },
+            credentials: "include"
+        }).json());
+
+        response.map((lobby, i) => {
+            setUpHTML("div",{class:"lobbyCard"}, this.lobbyList);
+
+            const joinButton = setUpHTML("input", {type:"button", class:"createRoom", id:"joinRoom " + i, value:"Join Room!"}, this.lobbyList)
+
+            joinButton.addEventListener("click", () => {
+                var form = setUpHTML("form",{method:"POST", action: "./lobby"}, document.body);
+                var element1 = setUpHTML("input", {value: this.user, name: "userID", class:"hiddenInput"}, form); 
+        
+                form.submit();
+                
+            })
+        })
 
     }
 }
@@ -94,13 +117,13 @@ class friendList {
     }
 
     async fetchFriends(){
-        const response =["Carl", "Peter", "Flötenmann"]
+        const response =["Carl", "Peter", "Flötenmann"];
 
         this.friendList = setUpHTML("div", {class: "list", id:"friendList"}, this.ref);
 
         response.forEach((friend)=>{
 
-            const card = setUpHTML("div",{class:"friendCard", id:"friendCard"},this.friendList)
+            const card = setUpHTML("div",{class:"friendCard", id:"friendCard"},this.friendList);
 
             const txt = document.createTextNode(friend);
 
