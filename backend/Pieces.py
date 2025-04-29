@@ -19,7 +19,7 @@ class Piece:
     def bruteForceGenerateAllMoves(self):
         moves = []
 
-        #if self.name != 'P':
+        # if self.name != 'P':
         for x in range(8):
             for y in range(8):
                 if self.validateMove(x, y):
@@ -29,7 +29,7 @@ class Piece:
                     moves.append(Move(self, self.pos_x, self.pos_y, x, y, kills))
         return moves
         
-        #else:
+        # else:
         #    return self.returnAllMoves()
     
 
@@ -75,7 +75,8 @@ class Knight(Piece):
         self.name = 'N'
 
     def validateMove(self, new_x, new_y):
-        if self.game.getBoard(new_x, new_y) == 0 or self.game.getBoard(new_x, new_y).color != self.color: # checken das keine Mate auf dem Feld steht
+        # check for same colored pieces on field
+        if self.game.getBoard(new_x, new_y) == 0 or self.game.getBoard(new_x, new_y).color != self.color:
             if abs(self.pos_x - new_x) == 2 and abs(self.pos_y - new_y) == 1:
                 return True
             if abs(self.pos_x - new_x) == 1 and abs(self.pos_y - new_y) == 2:
@@ -230,5 +231,6 @@ class King(Piece):
     
     def validateMove(self, new_x, new_y):
         if abs(self.pos_x - new_x) <= 1 and abs(self.pos_y - new_y) <= 1:
-            if self.game.getBoard(new_x, new_y) == 0 or self.game.getBoard(new_x, new_y).color != self.color: # friendly fire check
+            # friendly fire check
+            if self.game.getBoard(new_x, new_y) == 0 or self.game.getBoard(new_x, new_y).color != self.color:
                 return True
