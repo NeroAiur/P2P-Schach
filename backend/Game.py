@@ -21,7 +21,7 @@ class Player:
         self.name = name
         self.color = color
         self.moves = []
-        self.figures = []
+        self.pieces = []
         self.king = None
         self.inCheck = False
         self.time = None
@@ -126,9 +126,9 @@ class Game:
             for y in range(8):
                 if self.getBoard(x, y) != 0:
                     if y < 2:
-                        self.player1.figures.append(self.getBoard(x, y))
+                        self.player1.pieces.append(self.getBoard(x, y))
                     if y > 5:
-                        self.player2.figures.append(self.getBoard(x, y))
+                        self.player2.pieces.append(self.getBoard(x, y))
 
         self.player1.king = self.getBoard(4, 0)
         self.player2.king = self.getBoard(4, 7)
@@ -144,7 +144,7 @@ class Game:
             return False
 
         if self.board[prev_y*8 + prev_x] == 0:
-            print("There is no figure on the Position " + chessEncoder(prev_x, prev_y))
+            print("There is no piece on the Position " + chessEncoder(prev_x, prev_y))
             return False
         
         if prev_x == new_x and prev_y == new_y:
@@ -173,9 +173,9 @@ class Game:
                         self.setBoard(rook_move.from_x, rook_move.from_y, 0)
                         
                     # "moved two fields last turn"-upate for 'en passant' 
-                    for figure in self.turn.figures:
-                        if figure.name == "P":
-                            figure.moved_two_fields_last_turn = False
+                    for piece in self.turn.pieces:
+                        if piece.name == "P":
+                            piece.moved_two_fields_last_turn = False
 
                     if move.piece.name == 'P' and abs(move.from_y - move.to_y) == 2:
                         move.piece.moved_two_fields_last_turn = True
@@ -183,9 +183,9 @@ class Game:
                     # KILL THE PIECE -ANNIHILATION!!!
                     if move.kills != None:
                         if self.turn == self.player1:
-                            self.player2.figures.remove(move.kills)
+                            self.player2.pieces.remove(move.kills)
                         else:
-                            self.player1.figures.remove(move.kills)
+                            self.player1.pieces.remove(move.kills)
                         self.setBoard(move.kills.pos_x, move.kills.pos_y, 0)
 
                     move.piece.updatePos(new_x, new_y)
@@ -203,22 +203,22 @@ class Game:
         to_remove = []
 
         # generate all theoretically possible moves
-        # figures
-        for figure in player.figures:
-            new_moves = figure.bruteForceGenerateAllMoves()
+        # pieces
+        for piece in player.pieces:
+            new_moves = piece.bruteForceGenerateAllMoves()
             if new_moves != None:
                 player.moves.extend(new_moves)
 
         # special moves
         # en passant
-        for enemy_figure in enemy_player.figures:
-            if enemy_figure.name == 'P' and enemy_figure.moved_two_fields_last_turn:
-                for own_figure in player.figures:
-                    if own_figure.name == 'P' and (own_figure.pos_x == enemy_figure.pos_x + 1 or own_figure.pos_x == enemy_figure.pos_x - 1):
-                        if player.color == 'white' and own_figure.pos_y == 4:
-                            player.moves.append(Move(own_figure, own_figure.pos_x, own_figure.pos_y, enemy_figure.pos_x, enemy_figure.pos_y + 1, enemy_figure))
-                        if player.color == 'black' and own_figure.pos_y == 3:
-                            player.moves.append(Move(own_figure, own_figure.pos_x, own_figure.pos_y, enemy_figure.pos_x, enemy_figure.pos_y - 1, enemy_figure))
+        for enemy_piece in enemy_player.pieces:
+            if enemy_piece.name == 'P' and enemy_piece.moved_two_fields_last_turn:
+                for own_piece in player.pieces:
+                    if own_piece.name == 'P' and (own_piece.pos_x == enemy_piece.pos_x + 1 or own_piece.pos_x == enemy_piece.pos_x - 1):
+                        if player.color == 'white' and own_piece.pos_y == 4:
+                            player.moves.append(Move(own_piece, own_piece.pos_x, own_piece.pos_y, enemy_piece.pos_x, enemy_piece.pos_y + 1, enemy_piece))
+                        if player.color == 'black' and own_piece.pos_y == 3:
+                            player.moves.append(Move(own_piece, own_piece.pos_x, own_piece.pos_y, enemy_piece.pos_x, enemy_piece.pos_y - 1, enemy_piece))
 
         # castling
         if player.king.has_been_moved == False and player.king.has_castled == False and player.inCheck == False:
@@ -230,8 +230,8 @@ class Game:
                 # long castling
                 if self.getBoard(1, y_pos) == 0 and self.getBoard(2, y_pos) == 0 and self.getBoard(3, y_pos) == 0:
                     move_is_possible = True
-                    for figure in enemy_player.figures:
-                        if figure.validateMove(1, y_pos) or figure.validateMove(2, y_pos) or figure.validateMove(3, y_pos):
+                    for piece in enemy_player.pieces:
+                        if piece.validateMove(1, y_pos) or piece.validateMove(2, y_pos) or piece.validateMove(3, y_pos):
                             move_is_possible = False
                             break
                     if move_is_possible:
@@ -240,8 +240,8 @@ class Game:
                 if self.getBoard(5, y_pos) == 0 and self.getBoard(6, y_pos) == 0:
                     rook_pos = self.getBoard(7, y_pos)
                     move_is_possible = True
-                    for figure in enemy_player.figures:
-                        if figure.validateMove(5, y_pos) or figure.validateMove(6, y_pos):
+                    for piece in enemy_player.pieces:
+                        if piece.validateMove(5, y_pos) or piece.validateMove(6, y_pos):
                             move_is_possible = False
                             break
                     if move_is_possible:
@@ -276,18 +276,18 @@ class Game:
 
         # if enemy there, ANNIHILATE IT
         if move.kills != None:
-            enemy_player.figures.remove(copy_of_game.getBoard(move.kills.pos_x, move.kills.pos_y))
+            enemy_player.pieces.remove(copy_of_game.getBoard(move.kills.pos_x, move.kills.pos_y))
             
         copy_of_game.setBoard(move.to_x, move.to_y, move.piece)
         copy_of_game.setBoard(move.from_x, move.from_y, 0)
 
-        for figure in enemy_player.figures:
-            figure.game = copy_of_game
-            if figure.validateMove(player.king.pos_x, player.king.pos_y):
+        for piece in enemy_player.pieces:
+            piece.game = copy_of_game
+            if piece.validateMove(player.king.pos_x, player.king.pos_y):
                 player.king.updatePos(prev_king_pos_x, prev_king_pos_y)
-                figure.game = self
+                piece.game = self
                 return True
-            figure.game = self
+            piece.game = self
 
         player.king.updatePos(prev_king_pos_x, prev_king_pos_y)
         return False
@@ -296,8 +296,8 @@ class Game:
     def run_turn(self, move):
         enemy_player = self.player2 if self.turn == self.player1 else self.player1
         self.turn.inCheck = False
-        for figure in enemy_player.figures:
-            if figure.validateMove(self.turn.king.pos_x, self.turn.king.pos_y):
+        for piece in enemy_player.pieces:
+            if piece.validateMove(self.turn.king.pos_x, self.turn.king.pos_y):
                 self.turn.inCheck = True
         self.generateAllMoves(self.turn)
 
@@ -352,8 +352,8 @@ class Game:
             # check for check kek
             enemy_player = self.player2 if self.turn == self.player1 else self.player1
             self.turn.inCheck = False
-            for figure in enemy_player.figures:
-                if figure.validateMove(self.turn.king.pos_x, self.turn.king.pos_y):
+            for piece in enemy_player.pieces:
+                if piece.validateMove(self.turn.king.pos_x, self.turn.king.pos_y):
                     self.turn.inCheck = True
 
             self.generateAllMoves(self.turn)
