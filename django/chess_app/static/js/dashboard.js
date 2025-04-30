@@ -33,12 +33,27 @@ class lobbyBrowser {
         this.registerLobbyNav();
     }
 
+    // registerLobbyNav(){
+    //     const navBar = document.getElementById("roomBrowserBanner");
+    //     const createButton = setUpHTML("input", {type:"button", class:"createRoom", id:"createRoom", value:"Create Room!"}, navBar);
+
+    //     createButton.addEventListener("click", () => {
+    //         var form = setUpHTML("form",{method:"POST", action: "./registerLobby"}, document.body);
+    //         var element1 = setUpHTML("input", {value: this.user, name: "userID", class:"hiddenInput"}, form); 
+    
+    //         form.submit();
+            
+    //     })
+
+    //     this.lobbyList = setUpHTML("div", {class: "lobbyList", id:"lobbyList"}, this.Ref);
+
+    // }
     registerLobbyNav(){
         const navBar = document.getElementById("roomBrowserBanner");
         const createButton = setUpHTML("input", {type:"button", class:"createRoom", id:"createRoom", value:"Create Room!"}, navBar);
 
         createButton.addEventListener("click", () => {
-            var form = setUpHTML("form",{method:"POST", action: "./registerLobby"}, document.body);
+            var form = setUpHTML("form",{method:"POST", action: "./join_game"}, document.body);
             var element1 = setUpHTML("input", {value: this.user, name: "userID", class:"hiddenInput"}, form); 
     
             form.submit();

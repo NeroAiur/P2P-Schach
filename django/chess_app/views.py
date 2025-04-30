@@ -9,7 +9,8 @@ from django.views.generic.base import TemplateView
 from backend.database_ops import add_user, get_uID, user_login
 from django.views.decorators.csrf import csrf_exempt
 from django.urls import reverse
-
+from django.http import HttpResponseRedirect
+from django.views import View
 
 def index(request):
     return render(request, "index.html")
@@ -33,14 +34,44 @@ def login_user(request):
 
     return redirect('dashboard', uID=uID)
 
+@csrf_exempt
 def render_dashboard(request, uID):
     context = {
         'uID' : uID,
     }
     return render(request, "dashboard.html", context)
 
-class GameView(TemplateView):
-    template_name = "chessboard.html"
+@csrf_exempt
+def render_game(request, roomID):
+    context = {
+        'roomID' : roomID,
+    }
+    return render(request, "chessboard.html", context)
+
+room_states = {}
+
+@csrf_exempt
+def join_game_room(request):
+    global room_states
+    room_id = 1
+
+    # Finde einen nicht vollen Raum oder erstelle einen neuen
+    while str(room_id) in room_states and room_states[str(room_id)] >= 2:
+        room_id += 1
+
+    room_key = str(room_id)
+    if room_key in room_states:
+        room_states[room_key] += 1
+        is_room_full = True
+    else:
+        room_states[room_key] = 1
+        is_room_full = False
+
+    response = HttpResponseRedirect(f'/game_{room_key}/')
+    response.set_cookie('roomID', room_key, path=f'/game_{room_key}/')
+    response.set_cookie('is_room_full', str(is_room_full), path=f'/game_{room_key}/')
+
+    return redirect('game', roomID = room_id)
 
 class DashboardView(TemplateView):
     template_name = "dashboard.html"
