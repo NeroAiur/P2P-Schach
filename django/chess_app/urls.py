@@ -9,6 +9,7 @@ urlpatterns = [
     path('dashboard_<uID>', render_dashboard,   name='dashboard'),
     path('register',        register_user,      name="register"),
     path('login',           login_user,         name="login"),
+    path('lobby',           request_lobby,      name="lobby")
 
     # path('game/<room_<room_ID>/send_gamestate', send_gamestate,                    name="send_gamestate"),
     # path('profile/<ID>/update_<elo>',          change_profile_name(),             name="change_elo"),

@@ -1,23 +1,29 @@
-import { setAttributes, setUpHTML, setUpSVG } from "./helperScripts.js";
+import { setAttributes, setUpHTML, setUpSVG, getCookie } from "./helperScripts.js";
 
 
 window.onload = () => {
+    
+    const url = window.location.href;
+
+    const userID = url.split("_")[1]
+
+    localStorage.setItem("userID", userID);
 
     var parent = document.getElementById("roomBrowser");
 
-    const browser = new lobbyBrowser(null, parent);
+    const browser = new lobbyBrowser(userID, parent);
 
     parent = document.getElementById("globalRanking");
 
-    const globalRanking = new rankingBoard(null, parent, "global");
+    const globalRanking = new rankingBoard(userID, parent, "global");
 
     parent = document.getElementById("friendRanking");
 
-    const friendRanking = new rankingBoard(null, parent, "friend");
+    const friendRanking = new rankingBoard(userID, parent, "friend");
 
     parent = document.getElementById("friendbar");
 
-    const friendbar = new friendList(null, parent);
+    const friendbar = new friendList(userID, parent);
 }
 
 /*Requests all active lobbys from /lobby and displays the results in form {oppoName:string, gameID:string, type: string}. Clicking on a certain room will join that game via the gameID.
@@ -31,23 +37,9 @@ class lobbyBrowser {
         this.Ref = Ref;
         
         this.registerLobbyNav();
+        this.fetchLobbys();
     }
 
-    // registerLobbyNav(){
-    //     const navBar = document.getElementById("roomBrowserBanner");
-    //     const createButton = setUpHTML("input", {type:"button", class:"createRoom", id:"createRoom", value:"Create Room!"}, navBar);
-
-    //     createButton.addEventListener("click", () => {
-    //         var form = setUpHTML("form",{method:"POST", action: "./registerLobby"}, document.body);
-    //         var element1 = setUpHTML("input", {value: this.user, name: "userID", class:"hiddenInput"}, form); 
-    
-    //         form.submit();
-            
-    //     })
-
-    //     this.lobbyList = setUpHTML("div", {class: "lobbyList", id:"lobbyList"}, this.Ref);
-
-    // }
     registerLobbyNav(){
         const navBar = document.getElementById("roomBrowserBanner");
         const createButton = setUpHTML("input", {type:"button", class:"createRoom", id:"createRoom", value:"Create Room!"}, navBar);
@@ -69,18 +61,22 @@ class lobbyBrowser {
         const csrftoken = getCookie('csrftoken');
 
         const response = await (await fetch("/lobby", {
-            method: "GET",
+            method: "POST",
             headers: {
                 "Content-Type": "application/json; charset=UTF-8",
                 "X-CSRFToken": csrftoken
             },
             credentials: "include"
-        }).json());
+        })).json();
 
         response.map((lobby, i) => {
-            setUpHTML("div",{class:"lobbyCard"}, this.lobbyList);
+            const card = setUpHTML("div",{class:"lobbyCard"}, this.lobbyList);
 
-            const joinButton = setUpHTML("input", {type:"button", class:"createRoom", id:"joinRoom " + i, value:"Join Room!"}, this.lobbyList)
+            const txt = setUpHTML("p", {class:"lobbyText"}, card);
+
+            txt.textContent = "Opponent: " + lobby.userID + " has " + lobby.score + " ELO";
+
+            const joinButton = setUpHTML("input", {type:"button", class:"joinRoom", id:"joinRoom " + i, value:"Join Room!"}, card)
 
             joinButton.addEventListener("click", () => {
                 var form = setUpHTML("form",{method:"POST", action: lobby.endPoint}, document.body);

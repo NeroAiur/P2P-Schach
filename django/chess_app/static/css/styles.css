@@ -213,6 +213,19 @@ input::placeholder{
     border:none;
 }
 
+
+.joinRoom {
+
+    width: 300px;
+    height: auto;
+    margin: var(--contentPadding) var(--contentPadding) var(--contentPadding) auto;
+
+    color: var(--colorText1);
+    background-color: var(--colorSignal);
+    
+    border:none;
+}
+
 .createRoom:hover{
     background-color: var(--colorSignalHigh);
 }
@@ -235,11 +248,21 @@ input::placeholder{
 }
 
 .lobbyCard {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+
     height: 150px;
     width: auto;
     margin: var(--contentPadding);
 
     background-color: var(--colorAccent2);
+}
+
+.lobbyText {
+    height: auto;
+    width: auto;
+    margin: var(--contentPadding);
 }
 
 .rankingCard {
