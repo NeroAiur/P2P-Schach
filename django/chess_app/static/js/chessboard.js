@@ -45,6 +45,7 @@ class chessboard {
         this.setUpInfo();
 
         if(this.side=="white"){this.interID = setInterval(() => {this.awaitGame();}, 1000);}
+        if(this.side=="black"){this.interID = setInterval(() => {this.requestGameState();}, 1000);}
 
     }
 
@@ -66,18 +67,14 @@ class chessboard {
 
         response = await response.json()
 
-        console.log(response)
-        console.log(response.black)
-        console.log(this.gameTiles)
+        console.log("response.black: "+ response.black)
+        console.log("this.user: "+ this.user)
 
         if(response.black != "none"){
 
             // this.pieces.map((row)=>{
-            //     console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
             //     row.map((tile)=>{
-            //         console.log('BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB')
             //         if(tile instanceof gamePiece){
-            //             console.log('CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC')
             //             tile.startListen();
             //         }
     
@@ -104,13 +101,27 @@ class chessboard {
             roomID:this.roomID,
         };
 
-        var response = await (await fetch("./await_game", {
+        console.log(queryparams)
+
+        var response = await fetch("./request_game", {
 
             method: "POST",
             body: JSON.stringify(queryparams),
             headers: {"Content-type": "application/json; charset=UTF-8"}
 
-        }).json());
+        });
+
+        // response = await response.json();
+
+        // var response = await (await fetch("./await_game", {
+
+        //     method: "POST",
+        //     body: JSON.stringify(queryparams),
+        //     headers: {"Content-type": "application/json; charset=UTF-8"}
+
+        // }));
+
+        // response = await response.json();
 
     }
 

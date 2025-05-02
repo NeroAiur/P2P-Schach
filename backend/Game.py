@@ -135,6 +135,7 @@ class Game:
 
     def move(self, prev_x, prev_y, new_x, new_y):
 
+        # Anpassung der Werte, weil das was ausm Frontend kommt um eins zu niedrig ist und ich zu dumm bin um das im Frontend anzupassen
         prev_y = prev_y + 1
         new_y = new_y + 1
         

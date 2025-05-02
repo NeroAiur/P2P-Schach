@@ -12,7 +12,8 @@ urlpatterns = [
     path('join',            join_lobby,         name="join"),
     path('lobby',           request_lobby,      name="lobby"),
     path('send_move',       send_move,          name="send_move"),
-    path('await_game',      await_game,         name="await_game")
+    path('await_game',      await_game,         name="await_game"),
+    path('request_game',    request_gamestate,  name="request_game"),
     # path('game/<room_<room_ID>/send_gamestate', send_gamestate,                    name="send_gamestate"),
     # path('profile/<ID>/update_<elo>',          change_profile_name(),             name="change_elo"),
 

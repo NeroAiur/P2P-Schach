@@ -142,7 +142,7 @@ def request_gamestate(request):
     for room in rooms:
         if int(room['room_id']) == int(roomID):
             joined_room = room
-    board = joined_room['game'].getEFNBoard()
+    board = joined_room['game'].getFENBoard()
 
     return HttpResponse(board)
 
