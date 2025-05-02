@@ -135,6 +135,9 @@ class Game:
 
     def move(self, prev_x, prev_y, new_x, new_y):
 
+        prev_y = prev_y + 1
+        new_y = new_y + 1
+        
         if prev_x < 0 or prev_x > 7 or prev_y < 0 or prev_y > 7:
             print("Position is out of bounds")
             return False
