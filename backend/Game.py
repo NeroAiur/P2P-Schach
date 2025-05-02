@@ -292,6 +292,14 @@ class Game:
         player.king.updatePos(prev_king_pos_x, prev_king_pos_y)
         return False
     
+    def getAllMoves(self):
+        self.generateAllMoves(self.turn)
+        all_moves = []
+        for move in self.turn.moves:
+            all_moves.append(move.printMove())
+            
+        return all_moves
+    
     # --------------- turn during active game
     def run_turn(self, move):
         enemy_player = self.player2 if self.turn == self.player1 else self.player1
@@ -300,24 +308,6 @@ class Game:
             if piece.validateMove(self.turn.king.pos_x, self.turn.king.pos_y):
                 self.turn.inCheck = True
         self.generateAllMoves(self.turn)
-
-        # GameOver check
-        if len(self.turn.moves) == 0:
-            if self.turn.inCheck:
-                print(bcolors.FAIL + "CHECKMATE" + bcolors.ENDC)
-                if self.turn == self.player1:
-                    # player2.name + " wins"
-                    pass
-                else:
-                    # player1.name + " wins"
-                    pass
-            else:
-                #"STALEMATE"
-                pass
-
-        if self.turn.inCheck:
-            # "You are CZECH"
-            pass
 
         pos = move[0:2]
         to = move[-2:]
@@ -334,7 +324,24 @@ class Game:
             else:
                 self.turn = self.player1
 
-        return json.dumps(self.getFENBoard())
+        enemy_player = self.player2 if self.turn == self.player1 else self.player1
+        self.turn.inCheck = False
+        for piece in enemy_player.pieces:
+            if piece.validateMove(self.turn.king.pos_x, self.turn.king.pos_y):
+                self.turn.inCheck = True
+        all_moves = self.getAllMoves()
+
+        # GameOver check (sets result)
+        # result: 0-none, 1-last turn player wins, 2-stalemate(draw)
+        result = 0 
+        if len(self.turn.moves) == 0:
+            if self.turn.inCheck:
+                print(bcolors.FAIL + "CHECKMATE" + bcolors.ENDC)
+                result = 1
+            else:
+                result = 2
+
+        return json.dumps(self.getFENBoard(), all_moves, self.turn.inCheck, result)
     # ---------------
 
     def run(self):
