@@ -4,13 +4,15 @@ from .views import *
 
 urlpatterns = [
     path('',                index,              name="index"),
-    path('join_game',       join_game_room,     name="join_game"),
+    path('create_game',     create_game_room,   name="create_game"),
     path('game_<roomID>',   render_game,        name='game'),
-    path('dashboard_<uID>', render_dashboard,   name='dashboard'),
+    path('dashboard',       render_dashboard,   name='dashboard'),
     path('register',        register_user,      name="register"),
     path('login',           login_user,         name="login"),
-    path('lobby',           request_lobby,      name="lobby")
-
+    path('join',            join_lobby,         name="join"),
+    path('lobby',           request_lobby,      name="lobby"),
+    path('send_move',       send_move,          name="send_move"),
+    path('await_game',       await_game,          name="await_game")
     # path('game/<room_<room_ID>/send_gamestate', send_gamestate,                    name="send_gamestate"),
     # path('profile/<ID>/update_<elo>',          change_profile_name(),             name="change_elo"),
 

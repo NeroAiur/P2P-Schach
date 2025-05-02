@@ -3,9 +3,9 @@ import { setAttributes, setUpHTML, setUpSVG, getCookie } from "./helperScripts.j
 
 window.onload = () => {
     
-    const url = window.location.href;
+    const cookie = document.cookie;
 
-    const userID = url.split("_")[1]
+    const userID = cookie.split("=")[1]
 
     localStorage.setItem("userID", userID);
 
@@ -45,7 +45,7 @@ class lobbyBrowser {
         const createButton = setUpHTML("input", {type:"button", class:"createRoom", id:"createRoom", value:"Create Room!"}, navBar);
 
         createButton.addEventListener("click", () => {
-            var form = setUpHTML("form",{method:"POST", action: "./join_game"}, document.body);
+            var form = setUpHTML("form",{method:"POST", action: "./create_game"}, document.body);
             var element1 = setUpHTML("input", {value: this.user, name: "userID", class:"hiddenInput"}, form); 
     
             form.submit();
@@ -70,6 +70,7 @@ class lobbyBrowser {
         })).json();
 
         response.map((lobby, i) => {
+
             const card = setUpHTML("div",{class:"lobbyCard"}, this.lobbyList);
 
             const txt = setUpHTML("p", {class:"lobbyText"}, card);
@@ -79,8 +80,9 @@ class lobbyBrowser {
             const joinButton = setUpHTML("input", {type:"button", class:"joinRoom", id:"joinRoom " + i, value:"Join Room!"}, card)
 
             joinButton.addEventListener("click", () => {
-                var form = setUpHTML("form",{method:"POST", action: lobby.endPoint}, document.body);
-                var element1 = setUpHTML("input", {value: this.user, name: "userID", class:"hiddenInput"}, form); 
+                var form = setUpHTML("form",{method:"POST", action:"/join"}, document.body);
+                setUpHTML("input", {value: this.user, name: "userID", class:"hiddenInput"}, form);
+                setUpHTML("input", {value: lobby.room_id, name: "roomID", class:"hiddenInput"}, form);  
         
                 form.submit();
                 

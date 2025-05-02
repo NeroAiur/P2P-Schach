@@ -23,6 +23,10 @@ export class gamePiece {
 
     }
 
+    remove(){
+        this.svg.remove();
+    }
+
     startListen(){
 
         if (this.side == this.game.side) {
@@ -80,16 +84,17 @@ export class gamePiece {
             if ((tileLowerX <= x) && (x <= tileUpperX) && (tileLowerY < y) && (y < tileUpperY)) {
                 //send Move
                 const queryparams = {
+                    roomID: this.game.roomID,
+                    userID: this.game.user,
+                    side: this.side,
                     move: encodeRow(this.pos.y) + this.pos.x  + " to " + encodeRow(tile.y) + tile.x,
                 };
-
-                console.log(queryparams);
 
                 this.pos = tile;
 
                 const csrftoken = getCookie('csrftoken');
 
-                await fetch("/", {
+                await fetch("/send_move", {
                     method: "POST",
                     body: JSON.stringify(queryparams),
                     headers: {
