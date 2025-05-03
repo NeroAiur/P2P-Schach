@@ -13,9 +13,7 @@ window.onload = () => {
 
     const userID = localStorage.getItem('userID')
 
-    const gameboard = new chessboard(roomID, userID, "???", side, "fast", parent)
-
-    console.log(gameboard)
+    const gameboard = new chessboard(roomID, userID, "???", side, "fast", parent);
     
 }
 
@@ -24,7 +22,7 @@ class chessboard {
     constructor(roomID, user, oppo, side, type, ref) {
 
         this.roomID = roomID;
-        this.turn = 0;
+        this.turn = 1;
         this.user = user;
         this.side = side;
         this.oppo = oppo;
@@ -36,19 +34,16 @@ class chessboard {
         this.gameInfo = document.getElementById("gameInfo");
 
         this.gameTiles = [...Array(8)].map(e => Array(8));
+
         this.pieces=[];
 
         this.timer = 900;
 
         this.setUpGame()
 
-        this.requestGameState();
-
         this.setUpInfo();
 
-        if(this.side=="white"){this.interID = setInterval(() => {this.awaitGame();}, 1000);}
-        if(this.side=="black"){this.interID = setInterval(() => {this.requestGameState();}, 1000);}
-
+        
     }
 
 
@@ -106,18 +101,22 @@ class chessboard {
 
         response = await response.json()
 
-        this.updateGameState(response)
+        console.log(this);
 
+        if(response.turn != this.turn){
+
+            this.updateGameState(response)
+        }
     }
 
 
 
     updateGameState(JSON){
 
-        if(JSON.turn == this.turn){return}
-
         clearInterval(this.interID)
 
+        this.turn = JSON.turn;
+        
         var rows = JSON.game.board.split('/');
 
         var iPiece= 0;
@@ -134,12 +133,9 @@ class chessboard {
             var y= 0;
             var tile = rows[i].split('');
 
-            console.log(tile)
-
             tile.forEach((tile, j) => {
 
                 if(!isNaN(tile)){
-                    console.log('number')
 
                     y = y + parseInt(tile)
 
@@ -171,11 +167,7 @@ class chessboard {
 
         })
 
-        this.turn++;
-
         const evenOdd= this.turn % 2; 
-
-        console.log(this)
 
         if(evenOdd == 0){
             console.log("1")
@@ -197,8 +189,17 @@ class chessboard {
 
             }else if(this.side =="white"){
                 console.log("5")
-                this.pieces.forEach((piece) => piece.startListen())
-                this.interID = setInterval(() => { this.timer--; this.timerTxt.textContent = Math.floor(this.timer / 60) + " : " + (this.timer % 60) }, 1000);
+                if(this.turn == 1){
+
+                    this.interID = setInterval(() => {this.awaitGame();}, 1000);
+
+                }else{
+
+                    this.pieces.forEach((piece) => piece.startListen())
+                    this.interID = setInterval(() => { this.timer--; this.timerTxt.textContent = Math.floor(this.timer / 60) + " : " + (this.timer % 60) }, 1000);
+
+                }
+
             }
 
         }
@@ -231,7 +232,9 @@ class chessboard {
         return mappedMoves
     }
 
-    setUpGame() {
+
+
+    async setUpGame() {
 
         const cssVar = window.getComputedStyle(document.documentElement);
 
@@ -268,7 +271,24 @@ class chessboard {
 
         }
 
-        console.log(this)
+        const queryparams = {
+            userID: this.user,
+            roomID:this.roomID,
+        };
+
+        var response = await fetch("./request_game", {
+
+            method: "POST",
+            body: JSON.stringify(queryparams),
+            headers: {"Content-type": "application/json; charset=UTF-8"}
+
+        });
+
+        response = await response.json();
+
+        console.log(response)
+
+        this.updateGameState(response)
 
     }
 

@@ -113,7 +113,9 @@ export class gamePiece {
                     credentials: "include"
                 });
 
-                response = await response.json()
+                response = await response.json();
+
+                this.game.turn++;
 
                 this.game.updateGameState(response)
 

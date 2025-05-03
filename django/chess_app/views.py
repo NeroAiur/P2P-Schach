@@ -170,7 +170,7 @@ def await_game(request):
     for room in rooms:
         if int(room['room_id']) == int(roomID):
             joined_room = room
-    response = {"black": joined_room['black']} 
+    response = {"black": joined_room['black']}
 
     return HttpResponse(json.dumps(response))
 
