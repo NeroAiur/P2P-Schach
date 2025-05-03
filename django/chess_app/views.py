@@ -81,6 +81,8 @@ def create_game_room(request):
     response.set_cookie('room_id', room_id, path=f'/game_{room_id}')
     response.set_cookie('side', 'white', path=f'/game_{room_id}')
 
+    room_id = room_id +1
+
     return response
 
 

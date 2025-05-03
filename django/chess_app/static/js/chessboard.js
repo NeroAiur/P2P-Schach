@@ -13,7 +13,7 @@ window.onload = () => {
 
     const userID = localStorage.getItem('userID')
 
-    const gameboard = new chessboard(roomID, userID, null, side, "fast", parent)
+    const gameboard = new chessboard(roomID, userID, "???", side, "fast", parent)
 
     console.log(gameboard)
     
