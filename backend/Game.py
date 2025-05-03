@@ -225,9 +225,10 @@ class Game:
             y_pos = 0
             if player.color == 'black':
                 y_pos = 7
+                
+            # long castling
             rook_pos = self.getBoard(0, y_pos)
             if rook_pos != 0 and rook_pos.name == "R" and rook_pos.has_been_moved == False:
-                # long castling
                 if self.getBoard(1, y_pos) == 0 and self.getBoard(2, y_pos) == 0 and self.getBoard(3, y_pos) == 0:
                     move_is_possible = True
                     for piece in enemy_player.pieces:
@@ -236,7 +237,10 @@ class Game:
                             break
                     if move_is_possible:
                         player.moves.append(Move(player.king, player.king.pos_x, player.king.pos_y, 2, y_pos, None, Move(rook_pos, rook_pos.pos_x, rook_pos.pos_y, 3, y_pos, None)))
-                # short castling
+            
+            # short castling
+            rook_pos = self.getBoard(7, y_pos)
+            if rook_pos != 0 and rook_pos.name == "R" and rook_pos.has_been_moved == False:
                 if self.getBoard(5, y_pos) == 0 and self.getBoard(6, y_pos) == 0:
                     rook_pos = self.getBoard(7, y_pos)
                     move_is_possible = True
