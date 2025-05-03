@@ -26,6 +26,7 @@ class chessboard {
     constructor(roomID, user, oppo, side, type, ref) {
 
         this.roomID = roomID;
+        this.turn = 1;
         this.user = user;
         this.side = side;
         this.oppo = oppo;
@@ -72,23 +73,16 @@ class chessboard {
 
         if(response.black != "none"){
 
-            // this.pieces.map((row)=>{
-            //     row.map((tile)=>{
-            //         if(tile instanceof gamePiece){
-            //             tile.startListen();
-            //         }
-    
-            //     })
-            // })
             this.pieces.map((tile) => {
                 if (tile instanceof gamePiece) {
                     tile.startListen();
                 }
             });
-    
-            setInterval(() => { this.timer--; this.timerTxt.textContent = Math.floor(this.timer / 60) + " : " + (this.timer % 60) }, 1000);
 
+            
             clearInterval(this.interID)
+    
+            this.interID = setInterval(() => { this.timer--; this.timerTxt.textContent = Math.floor(this.timer / 60) + " : " + (this.timer % 60) }, 1000);
 
         }
 
@@ -111,23 +105,19 @@ class chessboard {
 
         });
 
-        // response = await response.json();
+        response = await response.json()
 
-        // var response = await (await fetch("./await_game", {
-
-        //     method: "POST",
-        //     body: JSON.stringify(queryparams),
-        //     headers: {"Content-type": "application/json; charset=UTF-8"}
-
-        // }));
-
-        // response = await response.json();
+        this.updateGameState(response)
 
     }
 
-    updateGameState(board, possibleMoves){
-        var rows = board.split('/');
-        var tile = rows.split('');
+    updateGameState(JSON){
+
+        if(JSON.turn == this.turn){return}
+
+        clearInterval(this.interID)
+
+        var rows = JSON.game.board.split('/');
 
         var iPiece= 0;
 
@@ -138,31 +128,67 @@ class chessboard {
 
         rows.forEach((row, i)=>{
             var y= 0;
+            var tile = rows[i].split('');
+
+            console.log(tile)
 
             tile.forEach((tile, j)=>{
+
                 if(!isNaN(tile)){
+
                     y = y + tile
+
+                    return;
+
                 }
 
                 switch(tile){
-                    case 'R': this.pieces.push(new gamePiece(this, iPiece, "./static/Chesspieces/SVG/Turm_w.svg",       "white",    { x: i, y: y }, whiteGroup, possibleMoves[iPiece]));
-                    case 'N': this.pieces.push(new gamePiece(this, iPiece, "./static/Chesspieces/SVG/Springer_w.svg",   "white",    { x: i, y: y }, whiteGroup, possibleMoves[iPiece]));
-                    case 'B': this.pieces.push(new gamePiece(this, iPiece, "./static/Chesspieces/SVG/Läufer_w.svg",     "white",    { x: i, y: y }, whiteGroup, possibleMoves[iPiece]));
-                    case 'Q': this.pieces.push(new gamePiece(this, iPiece, "./static/Chesspieces/SVG/Dame_w.svg",       "white",    { x: i, y: y }, whiteGroup, possibleMoves[iPiece]));
-                    case 'K': this.pieces.push(new gamePiece(this, iPiece, "./static/Chesspieces/SVG/König_w.svg",      "white",    { x: i, y: y }, whiteGroup, possibleMoves[iPiece]));
-                    case 'P': this.pieces.push(new gamePiece(this, iPiece, "./static/Chesspieces/SVG/Bauer_w.svg",      "white",    { x: i, y: y }, whiteGroup, possibleMoves[iPiece]))
+                    case 'R': this.pieces.push(new gamePiece(this, iPiece, "./static/Chesspieces/SVG/Turm_w.svg",       "white",    { x: i, y: y }, this.whiteGroup, JSON.game.all_moves[iPiece])); break;
+                    case 'N': this.pieces.push(new gamePiece(this, iPiece, "./static/Chesspieces/SVG/Springer_w.svg",   "white",    { x: i, y: y }, this.whiteGroup, JSON.game.all_moves[iPiece])); break;
+                    case 'B': this.pieces.push(new gamePiece(this, iPiece, "./static/Chesspieces/SVG/Läufer_w.svg",     "white",    { x: i, y: y }, this.whiteGroup, JSON.game.all_moves[iPiece])); break;
+                    case 'Q': this.pieces.push(new gamePiece(this, iPiece, "./static/Chesspieces/SVG/Dame_w.svg",       "white",    { x: i, y: y }, this.whiteGroup, JSON.game.all_moves[iPiece])); break;
+                    case 'K': this.pieces.push(new gamePiece(this, iPiece, "./static/Chesspieces/SVG/König_w.svg",      "white",    { x: i, y: y }, this.whiteGroup, JSON.game.all_moves[iPiece])); break;
+                    case 'P': this.pieces.push(new gamePiece(this, iPiece, "./static/Chesspieces/SVG/Bauer_w.svg",      "white",    { x: i, y: y }, this.whiteGroup, JSON.game.all_moves[iPiece])); break;
 
-                    case 'r': this.pieces.push(new gamePiece(this,iPiece, "./static/Chesspieces/SVG/Turm_w.svg",        "black",    { x: i, y: y }, whiteGroup, possibleMoves[iPiece]));
-                    case 'n': this.pieces.push(new gamePiece(this, iPiece, "./static/Chesspieces/SVG/Springer_w.svg",   "black",    { x: i, y: y }, whiteGroup, possibleMoves[iPiece]));
-                    case 'b': this.pieces.push(new gamePiece(this, iPiece, "./static/Chesspieces/SVG/Läufer_w.svg",     "black",    { x: i, y: y }, whiteGroup, possibleMoves[iPiece]));
-                    case 'q': this.pieces.push(new gamePiece(this, iPiece, "./static/Chesspieces/SVG/Dame_w.svg",       "black",    { x: i, y: y }, whiteGroup, possibleMoves[iPiece]));
-                    case 'k': this.pieces.push(new gamePiece(this, iPiece, "./static/Chesspieces/SVG/König_w.svg",      "black",    { x: i, y: y }, whiteGroup, possibleMoves[iPiece]));
-                    case 'p': this.pieces.push(new gamePiece(this, iPiece, "./static/Chesspieces/SVG/Bauer.svg",        "black",    { x: i, y: i }, blackGroup, possibleMoves[iPiece]))
+                    case 'r': this.pieces.push(new gamePiece(this, iPiece, "./static/Chesspieces/SVG/Turm.svg",        "black",    { x: i, y: y }, this.blackGroup, JSON.game.all_moves[iPiece])); break;
+                    case 'n': this.pieces.push(new gamePiece(this, iPiece, "./static/Chesspieces/SVG/Springer.svg",   "black",    { x: i, y: y }, this.blackGroup, JSON.game.all_moves[iPiece])); break;
+                    case 'b': this.pieces.push(new gamePiece(this, iPiece, "./static/Chesspieces/SVG/Läufer.svg",     "black",    { x: i, y: y }, this.blackGroup, JSON.game.all_moves[iPiece])); break;
+                    case 'q': this.pieces.push(new gamePiece(this, iPiece, "./static/Chesspieces/SVG/Dame.svg",       "black",    { x: i, y: y }, this.blackGroup, JSON.game.all_moves[iPiece])); break;
+                    case 'k': this.pieces.push(new gamePiece(this, iPiece, "./static/Chesspieces/SVG/König.svg",      "black",    { x: i, y: y }, this.blackGroup, JSON.game.all_moves[iPiece])); break;
+                    case 'p': this.pieces.push(new gamePiece(this, iPiece, "./static/Chesspieces/SVG/Bauer.svg",        "black",    { x: i, y: y }, this.blackGroup, JSON.game.all_moves[iPiece])); break;
                 }
+
+                y++;
 
             })
 
         })
+
+        this.turn++;
+
+        if((this.turn % 2) == 0){
+
+            if(this.side = "black"){
+
+                this.pieces.forEach((piece) => piece.startListen())
+                this.interID = setInterval(() => { this.timer--; this.timerTxt.textContent = Math.floor(this.timer / 60) + " : " + (this.timer % 60) }, 1000);
+
+            }else{
+                this.interID = setInterval(() => {this.requestGameState();}, 1000);
+            }
+
+        }else{
+
+            if(this.side == "black"){
+
+                this.interID = setInterval(() => {this.requestGameState();}, 1000);
+
+            }else{
+                this.pieces.forEach((piece) => piece.startListen())
+                this.interID = setInterval(() => { this.timer--; this.timerTxt.textContent = Math.floor(this.timer / 60) + " : " + (this.timer % 60) }, 1000);
+            }
+
+        }
 
     }
 
@@ -176,18 +202,18 @@ class chessboard {
 
         this.gameInfo.style.width = (this.ref.parentElement.clientWidth - size) + "px";
 
-        const tileGroup = setUpSVG("g", {}, this.ref)
-        const blackGroup = setUpSVG("g", {}, this.ref)
-        const whiteGroup = setUpSVG("g", {}, this.ref)
+        this.tileGroup = setUpSVG("g", {}, this.ref)
+        this.blackGroup = setUpSVG("g", {}, this.ref)
+        this.whiteGroup = setUpSVG("g", {}, this.ref)
 
         for (let i = 0; i < 8; i++) {
 
             for (let j = 0; j < 8; j++) {
 
                 if (((i % 2) == 1 && (j % 2) == 1) || ((i % 2) == 0 && (j % 2) == 0)) {
-                    this.gameTiles[j][i] = setUpSVG("rect", { height: 100, width: 100, x: i * 100, y: j * 100, fill: cssVar.getPropertyValue("--colorSignal"), stroke: "black" }, tileGroup);
+                    this.gameTiles[j][i] = setUpSVG("rect", { height: 100, width: 100, x: i * 100, y: j * 100, fill: cssVar.getPropertyValue("--colorSignal"), stroke: "black" }, this.tileGroup);
                 } else {
-                    this.gameTiles[j][i] = setUpSVG("rect", { height: 100, width: 100, x: i * 100, y: j * 100, fill: cssVar.getPropertyValue("--colorBoardDark"), stroke: "black" }, tileGroup);
+                    this.gameTiles[j][i] = setUpSVG("rect", { height: 100, width: 100, x: i * 100, y: j * 100, fill: cssVar.getPropertyValue("--colorBoardDark"), stroke: "black" }, this.tileGroup);
                 }
 
             }
@@ -195,36 +221,36 @@ class chessboard {
 
         for(let i=0; i<8; i++){
 
-            var svg = setUpSVG("text", {x: i * 100 + 85, y:15, height: 100, width: 100, class:"boardLettering"}, tileGroup)
+            var svg = setUpSVG("text", {x: i * 100 + 85, y:15, height: 100, width: 100, class:"boardLettering"}, this.tileGroup)
             svg.textContent=encodeRow(i);
 
-            svg= setUpSVG("text", {x: 5, y: i * 100 + 95, height: 100, width: 100, class:"boardLettering"}, tileGroup)
+            svg= setUpSVG("text", {x: 5, y: i * 100 + 95, height: 100, width: 100, class:"boardLettering"}, this.tileGroup)
             svg.textContent= i+1;
 
         }
 
-        this.pieces.push(new gamePiece(this, 0, "./static/Chesspieces/SVG/Turm_w.svg",      "white",    { x: 0, y: 0 }, whiteGroup, []));
-        this.pieces.push(new gamePiece(this, 1, "./static/Chesspieces/SVG/Springer_w.svg",  "white",    { x: 0, y: 1 }, whiteGroup, [{ x: 2, y: 0 }, { x: 2, y: 2 }]));
-        this.pieces.push(new gamePiece(this, 2, "./static/Chesspieces/SVG/Läufer_w.svg",    "white",    { x: 0, y: 2 }, whiteGroup, []));
-        this.pieces.push(new gamePiece(this, 3, "./static/Chesspieces/SVG/Dame_w.svg",      "white",    { x: 0, y: 3 }, whiteGroup, []));
-        this.pieces.push(new gamePiece(this, 4, "./static/Chesspieces/SVG/König_w.svg",     "white",    { x: 0, y: 4 }, whiteGroup, []));
-        this.pieces.push(new gamePiece(this, 5, "./static/Chesspieces/SVG/Läufer_w.svg",    "white",    { x: 0, y: 5 }, whiteGroup, []));
-        this.pieces.push(new gamePiece(this, 6, "./static/Chesspieces/SVG/Springer_w.svg",  "white",    { x: 0, y: 6 }, whiteGroup, [{ x: 2, y: 7 }, { x: 2, y: 5 }]));
-        this.pieces.push(new gamePiece(this, 7, "./static/Chesspieces/SVG/Turm_w.svg",      "white",    { x: 0, y: 7 }, whiteGroup, []));
+        this.pieces.push(new gamePiece(this, 0, "./static/Chesspieces/SVG/Turm_w.svg",      "white",    { x: 0, y: 0 }, this.whiteGroup, []));
+        this.pieces.push(new gamePiece(this, 1, "./static/Chesspieces/SVG/Springer_w.svg",  "white",    { x: 0, y: 1 }, this.whiteGroup, [{ x: 2, y: 0 }, { x: 2, y: 2 }]));
+        this.pieces.push(new gamePiece(this, 2, "./static/Chesspieces/SVG/Läufer_w.svg",    "white",    { x: 0, y: 2 }, this.whiteGroup, []));
+        this.pieces.push(new gamePiece(this, 3, "./static/Chesspieces/SVG/Dame_w.svg",      "white",    { x: 0, y: 3 }, this.whiteGroup, []));
+        this.pieces.push(new gamePiece(this, 4, "./static/Chesspieces/SVG/König_w.svg",     "white",    { x: 0, y: 4 }, this.whiteGroup, []));
+        this.pieces.push(new gamePiece(this, 5, "./static/Chesspieces/SVG/Läufer_w.svg",    "white",    { x: 0, y: 5 }, this.whiteGroup, []));
+        this.pieces.push(new gamePiece(this, 6, "./static/Chesspieces/SVG/Springer_w.svg",  "white",    { x: 0, y: 6 }, this.whiteGroup, [{ x: 2, y: 7 }, { x: 2, y: 5 }]));
+        this.pieces.push(new gamePiece(this, 7, "./static/Chesspieces/SVG/Turm_w.svg",      "white",    { x: 0, y: 7 }, this.whiteGroup, []));
 
-        this.pieces.push(new gamePiece(this, 0, "./static/Chesspieces/SVG/Turm.svg",        "black",    { x: 7, y: 0 }, blackGroup, []));
-        this.pieces.push(new gamePiece(this, 1, "./static/Chesspieces/SVG/Springer.svg",    "black",    { x: 7, y: 1 }, blackGroup, []));
-        this.pieces.push(new gamePiece(this, 2, "./static/Chesspieces/SVG/Läufer.svg",      "black",    { x: 7, y: 2 }, blackGroup, []));
-        this.pieces.push(new gamePiece(this, 3, "./static/Chesspieces/SVG/Dame.svg",        "black",    { x: 7, y: 3 }, blackGroup, []));
-        this.pieces.push(new gamePiece(this, 4, "./static/Chesspieces/SVG/König.svg",       "black",    { x: 7, y: 4 }, blackGroup, []));
-        this.pieces.push(new gamePiece(this, 5, "./static/Chesspieces/SVG/Läufer.svg",      "black",    { x: 7, y: 5 }, blackGroup, []));
-        this.pieces.push(new gamePiece(this, 6, "./static/Chesspieces/SVG/Springer.svg",    "black",    { x: 7, y: 6 }, blackGroup, []));
-        this.pieces.push(new gamePiece(this, 7, "./static/Chesspieces/SVG/Turm.svg",        "black",    { x: 7, y: 7 }, blackGroup, []));
+        this.pieces.push(new gamePiece(this, 0, "./static/Chesspieces/SVG/Turm.svg",        "black",    { x: 7, y: 0 }, this.blackGroup, []));
+        this.pieces.push(new gamePiece(this, 1, "./static/Chesspieces/SVG/Springer.svg",    "black",    { x: 7, y: 1 }, this.blackGroup, []));
+        this.pieces.push(new gamePiece(this, 2, "./static/Chesspieces/SVG/Läufer.svg",      "black",    { x: 7, y: 2 }, this.blackGroup, []));
+        this.pieces.push(new gamePiece(this, 3, "./static/Chesspieces/SVG/Dame.svg",        "black",    { x: 7, y: 3 }, this.blackGroup, []));
+        this.pieces.push(new gamePiece(this, 4, "./static/Chesspieces/SVG/König.svg",       "black",    { x: 7, y: 4 }, this.blackGroup, []));
+        this.pieces.push(new gamePiece(this, 5, "./static/Chesspieces/SVG/Läufer.svg",      "black",    { x: 7, y: 5 }, this.blackGroup, []));
+        this.pieces.push(new gamePiece(this, 6, "./static/Chesspieces/SVG/Springer.svg",    "black",    { x: 7, y: 6 }, this.blackGroup, []));
+        this.pieces.push(new gamePiece(this, 7, "./static/Chesspieces/SVG/Turm.svg",        "black",    { x: 7, y: 7 }, this.blackGroup, []));
 
         for (let i = 0; i < 8; i++) {
 
-            this.pieces.push(new gamePiece(this, 7 + i, "./static/Chesspieces/SVG/Bauer_w.svg", "white", { x: 1, y: i }, whiteGroup, [{ x: 2, y: i }, { x: 3, y: i }]))
-            this.pieces.push(new gamePiece(this, 7 + i, "./static/Chesspieces/SVG/Bauer.svg", "black", { x: 6, y: i }, blackGroup, []))
+            this.pieces.push(new gamePiece(this, 7 + i, "./static/Chesspieces/SVG/Bauer_w.svg", "white", { x: 1, y: i }, this.whiteGroup, [{ x: 2, y: i }, { x: 3, y: i }]))
+            this.pieces.push(new gamePiece(this, 7 + i, "./static/Chesspieces/SVG/Bauer.svg", "black", { x: 6, y: i }, this.blackGroup, []))
 
         }
         

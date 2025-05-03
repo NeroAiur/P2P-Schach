@@ -38,6 +38,12 @@ export class gamePiece {
 
     }
 
+    stopListen(){
+        
+        this.svg.removeEventListener("mousedown", this.listener[0])
+    
+    }
+
     startDrag() {
 
         this.possibleMoves.forEach((tile) => {
@@ -82,19 +88,21 @@ export class gamePiece {
             const tileUpperY = (tile.y + 1) * 100;
 
             if ((tileLowerX <= x) && (x <= tileUpperX) && (tileLowerY < y) && (y < tileUpperY)) {
+
+                this.game.pieces.forEach((piece) => piece.stopListen())
                 //send Move
                 const queryparams = {
                     roomID: this.game.roomID,
                     userID: this.game.user,
                     side: this.side,
-                    move: encodeRow(this.pos.y) + this.pos.x  + " to " + encodeRow(tile.y) + tile.x,
+                    move: encodeRow(this.pos.y) + (this.pos.x + 1)  + " to " + encodeRow(tile.y) + (tile.x + 1),
                 };
 
                 this.pos = tile;
 
                 const csrftoken = getCookie('csrftoken');
 
-                await fetch("/send_move", {
+                var response = await fetch("/send_move", {
                     method: "POST",
                     body: JSON.stringify(queryparams),
                     headers: {
@@ -104,6 +112,9 @@ export class gamePiece {
                     credentials: "include"
                 });
 
+                response = await response.json()
+
+                this.game.updateGameState(response)
 
                 setAttributes(this.svg, { x: this.pos.y * 100, y: this.pos.x * 100 })
 
@@ -112,8 +123,15 @@ export class gamePiece {
                     const svg = this.game.gameTiles[tile.x][tile.y];
 
                     if (((tile.y % 2) == 1 && (tile.x % 2) == 1) || ((tile.y % 2) == 0 && (tile.x % 2) == 0)) {
+
                         setAttributes(svg, { fill: this.cssVar.getPropertyValue("--colorSignal") })
-                    } else { setAttributes(svg, { fill: this.cssVar.getPropertyValue("--colorBoardDark") }) }
+
+                    } else { 
+
+                        setAttributes(svg, { fill: this.cssVar.getPropertyValue("--colorBoardDark") }) 
+
+                    }
+
                 })
 
                 return

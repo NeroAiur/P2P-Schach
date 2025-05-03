@@ -73,7 +73,7 @@ def create_game_room(request):
 
     uID = request.POST.get('userID')
 
-    room.update({"room_id": room_id, "white": uID, "black": "none"})
+    room.update({"room_id": room_id, "white": uID, "black": "none", "turn": 1})
 
     rooms.append(room)
 
@@ -129,7 +129,14 @@ def send_move(request):
     
     new_state = joined_room['game'].run_turn(move)
 
-    return HttpResponse(new_state)
+    joined_room['turn'] = joined_room['turn'] + 1
+
+    JSON = {
+        "game": new_state,
+        "turn": joined_room['turn']
+    }
+
+    return HttpResponse(json.dumps(JSON))
 
 
 
@@ -142,9 +149,16 @@ def request_gamestate(request):
     for room in rooms:
         if int(room['room_id']) == int(roomID):
             joined_room = room
-    board = joined_room['game'].getFENBoard()
+    new_state = joined_room['game'].return_gamestate()
 
-    return HttpResponse(board)
+    
+    JSON = {
+        "game": new_state,
+        "turn": joined_room['turn']
+    }
+
+
+    return HttpResponse(json.dumps(JSON))
 
 @csrf_exempt
 def await_game(request):

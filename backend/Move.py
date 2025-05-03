@@ -11,4 +11,4 @@ class Move:
         self.linked_to = linked_to
 
     def printMove(self):
-        print(self.piece.name + " from " + chessEncoder(self.from_x, self.from_y) + " to " + chessEncoder(self.to_x, self.to_y))
+        print(chessEncoder(self.from_x, self.from_y) + chessEncoder(self.to_x, self.to_y))
