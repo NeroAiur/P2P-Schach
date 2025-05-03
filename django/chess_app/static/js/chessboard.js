@@ -123,22 +123,22 @@ class chessboard {
 
         this.pieces.forEach((piece)=>{
             piece.remove();
-            piece = null
         })
 
-        rows.forEach((row, i)=>{
+        this.pieces.splice(0, this.pieces.length);
+
+        rows.forEach((row, i)=> {
             var y= 0;
             var tile = rows[i].split('');
 
             console.log(tile)
 
-            tile.forEach((tile, j)=>{
+            tile.forEach((tile, j) => {
 
                 if(!isNaN(tile)){
+                    console.log('number')
 
-                    y = y + tile
-
-                    return;
+                    y = y + parseInt(tile)
 
                 }
 
@@ -147,22 +147,22 @@ class chessboard {
                 }
 
                 switch(tile){
-                    case 'R': this.pieces.push(new gamePiece(this, iPiece, "./static/Chesspieces/SVG/Turm_w.svg",       "white",    { x: i, y: y }, this.whiteGroup, decodedMoves[i][y])); break;
-                    case 'N': this.pieces.push(new gamePiece(this, iPiece, "./static/Chesspieces/SVG/Springer_w.svg",   "white",    { x: i, y: y }, this.whiteGroup, decodedMoves[i][y])); break;
-                    case 'B': this.pieces.push(new gamePiece(this, iPiece, "./static/Chesspieces/SVG/Läufer_w.svg",     "white",    { x: i, y: y }, this.whiteGroup, decodedMoves[i][y])); break;
-                    case 'Q': this.pieces.push(new gamePiece(this, iPiece, "./static/Chesspieces/SVG/Dame_w.svg",       "white",    { x: i, y: y }, this.whiteGroup, decodedMoves[i][y])); break;
-                    case 'K': this.pieces.push(new gamePiece(this, iPiece, "./static/Chesspieces/SVG/König_w.svg",      "white",    { x: i, y: y }, this.whiteGroup, decodedMoves[i][y])); break;
-                    case 'P': this.pieces.push(new gamePiece(this, iPiece, "./static/Chesspieces/SVG/Bauer_w.svg",      "white",    { x: i, y: y }, this.whiteGroup, decodedMoves[i][y])); break;
+                    case 'R': this.pieces.push(new gamePiece(this, iPiece, "./static/Chesspieces/SVG/Turm_w.svg",       "white",    { x: i, y: y }, this.whiteGroup, decodedMoves[i][y])); y++; break;
+                    case 'N': this.pieces.push(new gamePiece(this, iPiece, "./static/Chesspieces/SVG/Springer_w.svg",   "white",    { x: i, y: y }, this.whiteGroup, decodedMoves[i][y])); y++; break;
+                    case 'B': this.pieces.push(new gamePiece(this, iPiece, "./static/Chesspieces/SVG/Läufer_w.svg",     "white",    { x: i, y: y }, this.whiteGroup, decodedMoves[i][y])); y++; break;
+                    case 'Q': this.pieces.push(new gamePiece(this, iPiece, "./static/Chesspieces/SVG/Dame_w.svg",       "white",    { x: i, y: y }, this.whiteGroup, decodedMoves[i][y])); y++; break;
+                    case 'K': this.pieces.push(new gamePiece(this, iPiece, "./static/Chesspieces/SVG/König_w.svg",      "white",    { x: i, y: y }, this.whiteGroup, decodedMoves[i][y])); y++; break;
+                    case 'P': this.pieces.push(new gamePiece(this, iPiece, "./static/Chesspieces/SVG/Bauer_w.svg",      "white",    { x: i, y: y }, this.whiteGroup, decodedMoves[i][y])); y++; break;
 
-                    case 'r': this.pieces.push(new gamePiece(this, iPiece, "./static/Chesspieces/SVG/Turm.svg",        "black",    { x: i, y: y }, this.blackGroup, decodedMoves[i][y])); break;
-                    case 'n': this.pieces.push(new gamePiece(this, iPiece, "./static/Chesspieces/SVG/Springer.svg",   "black",    { x: i, y: y }, this.blackGroup, decodedMoves[i][y])); break;
-                    case 'b': this.pieces.push(new gamePiece(this, iPiece, "./static/Chesspieces/SVG/Läufer.svg",     "black",    { x: i, y: y }, this.blackGroup, decodedMoves[i][y])); break;
-                    case 'q': this.pieces.push(new gamePiece(this, iPiece, "./static/Chesspieces/SVG/Dame.svg",       "black",    { x: i, y: y }, this.blackGroup, decodedMoves[i][y])); break;
-                    case 'k': this.pieces.push(new gamePiece(this, iPiece, "./static/Chesspieces/SVG/König.svg",      "black",    { x: i, y: y }, this.blackGroup, decodedMoves[i][y])); break;
-                    case 'p': this.pieces.push(new gamePiece(this, iPiece, "./static/Chesspieces/SVG/Bauer.svg",        "black",    { x: i, y: y }, this.blackGroup, decodedMoves[i][y])); break;
+                    case 'r': this.pieces.push(new gamePiece(this, iPiece, "./static/Chesspieces/SVG/Turm.svg",        "black",    { x: i, y: y }, this.blackGroup, decodedMoves[i][y])); y++; break;
+                    case 'n': this.pieces.push(new gamePiece(this, iPiece, "./static/Chesspieces/SVG/Springer.svg",   "black",    { x: i, y: y }, this.blackGroup, decodedMoves[i][y])); y++; break;
+                    case 'b': this.pieces.push(new gamePiece(this, iPiece, "./static/Chesspieces/SVG/Läufer.svg",     "black",    { x: i, y: y }, this.blackGroup, decodedMoves[i][y])); y++; break;
+                    case 'q': this.pieces.push(new gamePiece(this, iPiece, "./static/Chesspieces/SVG/Dame.svg",       "black",    { x: i, y: y }, this.blackGroup, decodedMoves[i][y])); y++; break;
+                    case 'k': this.pieces.push(new gamePiece(this, iPiece, "./static/Chesspieces/SVG/König.svg",      "black",    { x: i, y: y }, this.blackGroup, decodedMoves[i][y])); y++; break;
+                    case 'p': this.pieces.push(new gamePiece(this, iPiece, "./static/Chesspieces/SVG/Bauer.svg",        "black",    { x: i, y: y }, this.blackGroup, decodedMoves[i][y])); y++; break;
+
+                    default: break;
                 }
-
-                y++;
 
             })
 
@@ -218,7 +218,7 @@ class chessboard {
             }
 
             if(mappedMoves[moveCoords.xo][moveCoords.yo] == undefined){
-                mappedMoves[moveCoords.xo][moveCoords.yo]=  [{x: moveCoords.xp, y: moveCoords.yp}];
+                mappedMoves[moveCoords.xo][moveCoords.yo]= [{x: moveCoords.xp, y: moveCoords.yp}];
             }else{
                 mappedMoves[moveCoords.xo][moveCoords.yo].push({x: moveCoords.xp, y: moveCoords.yp})
             }
