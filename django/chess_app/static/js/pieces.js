@@ -28,6 +28,7 @@ export class gamePiece {
     }
 
     startListen(){
+        if(this.possibleMoves == undefined) {return}
 
         if (this.side == this.game.side) {
 

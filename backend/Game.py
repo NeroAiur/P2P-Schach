@@ -353,6 +353,8 @@ class Game:
 
         all_moves = self.getAllMoves()
 
+        print(all_moves)
+
         result = 0 
         if len(self.turn.moves) == 0:
             if self.turn.inCheck:

@@ -86,3 +86,8 @@ export function encodeRow(row){
     return String.fromCharCode(65 + row);
 
 }
+
+export function decodeRow(row){
+
+    return (parseInt(row.charCodeAt(0)) - 65)
+}

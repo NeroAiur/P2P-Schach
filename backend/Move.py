@@ -12,3 +12,5 @@ class Move:
 
     def printMove(self):
         print(chessEncoder(self.from_x, self.from_y) + chessEncoder(self.to_x, self.to_y))
+
+        return (chessEncoder(self.from_x, self.from_y) + chessEncoder(self.to_x, self.to_y))
