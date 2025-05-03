@@ -50,7 +50,7 @@ export class gamePiece {
         this.possibleMoves.forEach((tile) => {
 
             const svg = this.game.gameTiles[tile.x][tile.y];
-            setAttributes(svg, { fill: this.cssVar.getPropertyValue("--colorSignalHigh") })
+            setAttributes(svg, { fill: this.cssVar.getPropertyValue("--colorHighlight") })
 
         })
 

@@ -73,7 +73,7 @@ def create_game_room(request):
 
     uID = request.POST.get('userID')
 
-    room.update({"room_id": room_id, "white": uID, "black": "none", "turn": 1})
+    room.update({"room_id": room_id, "white": uID, "black": "none", "turn": 1, "full": False})
 
     rooms.append(room)
 
@@ -100,6 +100,8 @@ def join_lobby(request):
             joined_room = room
 
     joined_room['black'] = uID
+    joined_room['full'] = True
+
     # players
     player1 = Player(joined_room['white'], "white")
     player2 = Player(joined_room['black'], "black")
@@ -179,8 +181,16 @@ def await_game(request):
 def request_lobby(request):
     global rooms
 
-    JSON = json.dumps(rooms)
-    return HttpResponse(JSON)
+    JSON = []
+
+    for room in rooms:
+        if(room['full'] == False ):
+            JSON.append( {
+                "room_id": room['room_id'],
+                "white": room['white']
+            } )
+
+    return HttpResponse(json.dumps(JSON))
 
     
 
