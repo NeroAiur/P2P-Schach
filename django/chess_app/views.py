@@ -73,7 +73,12 @@ def create_game_room(request):
 
     uID = request.POST.get('userID')
 
-    room.update({"room_id": room_id, "white": uID, "black": "none", "turn": 1, "full": False})
+    player1 = Player(uID, "white")
+    player2 = Player("???", "black")
+
+    game = Game(player1, player2)
+
+    room.update({"room_id": room_id, "white": uID, "black": "none", "turn": 1, "full": False, "game": game})
 
     rooms.append(room)
 
@@ -101,14 +106,6 @@ def join_lobby(request):
 
     joined_room['black'] = uID
     joined_room['full'] = True
-
-    # players
-    player1 = Player(joined_room['white'], "white")
-    player2 = Player(joined_room['black'], "black")
-
-    g = Game(player1, player2)
-
-    joined_room.update({'game' : g})
 
     response = HttpResponseRedirect(f'/game_{room_id}')
     response.set_cookie('room_id', room_id, path=f'/game_{room_id}')
