@@ -1,5 +1,7 @@
 import { setAttributes, setUpHTML, setUpSVG, getCookie, encodeRow } from "./helperScripts.js";
 
+
+
 export class gamePiece {
 
     id;
@@ -23,12 +25,16 @@ export class gamePiece {
 
     }
 
-    remove(){
+
+
+    remove() {
         this.svg.remove();
     }
 
-    startListen(){
-        if(this.possibleMoves == undefined) {return}
+    /*Makes game pieces interactable, when its your turn.*/
+
+    startListen() {
+        if (this.possibleMoves == undefined) { return }
 
         if (this.side == this.game.side) {
 
@@ -39,11 +45,15 @@ export class gamePiece {
 
     }
 
-    stopListen(){
-        
+
+
+    stopListen() {
+
         this.svg.removeEventListener("mousedown", this.listener[0])
-    
+
     }
+
+    /*Highlights the tiles, that the game piece can move to and attaches it to the cursor. */
 
     startDrag() {
 
@@ -64,6 +74,8 @@ export class gamePiece {
 
     }
 
+    /*Scalar is needed, because the SVG view window is always 800 x 800, while the tracked distance is dependingon your browser window. */
+
     dragPiece(event) {
 
         const x = this.svg.getAttribute("x");
@@ -72,8 +84,10 @@ export class gamePiece {
         const scalar = 800 / this.game.ref.clientHeight;
 
         setAttributes(this.svg, { x: parseInt(x) + parseInt(event.movementX) * scalar, y: parseInt(y) + parseInt(event.movementY) * scalar });
-        
+
     }
+
+    /*Determines if the position of the piece at the end of drag is a valid move and sends that move to the backend and updates the game statewith the response*/
 
     endDrag() {
 
@@ -93,10 +107,12 @@ export class gamePiece {
                 this.game.pieces.forEach((piece) => piece.stopListen())
                 //send Move
                 const queryparams = {
+
                     roomID: this.game.roomID,
                     userID: this.game.user,
                     side: this.side,
-                    move: encodeRow(this.pos.y) + (this.pos.x + 1)  + " to " + encodeRow(tile.y) + (tile.x + 1),
+                    move: encodeRow(this.pos.y) + (this.pos.x + 1) + " to " + encodeRow(tile.y) + (tile.x + 1),
+
                 };
 
                 this.pos = tile;
@@ -104,40 +120,42 @@ export class gamePiece {
                 const csrftoken = getCookie('csrftoken');
 
                 var response = await fetch("/send_move", {
+
                     method: "POST",
                     body: JSON.stringify(queryparams),
                     headers: {
+
                         "Content-Type": "application/json; charset=UTF-8",
                         "X-CSRFToken": csrftoken
+
                     },
                     credentials: "include"
+
                 });
 
                 response = await response.json();
-
-                this.game.turn++;
 
                 this.game.updateGameState(response)
 
                 setAttributes(this.svg, { x: this.pos.y * 100, y: this.pos.x * 100 })
 
-                this.possibleMoves.forEach((tile) => {
-
-                    const svg = this.game.gameTiles[tile.x][tile.y];
-
-                    if (((tile.y % 2) == 1 && (tile.x % 2) == 1) || ((tile.y % 2) == 0 && (tile.x % 2) == 0)) {
-
-                        setAttributes(svg, { fill: this.cssVar.getPropertyValue("--colorSignal") })
-
-                    } else { 
-
-                        setAttributes(svg, { fill: this.cssVar.getPropertyValue("--colorBoardDark") }) 
-
-                    }
-
-                })
-
                 return
+
+            }
+
+        })
+
+        this.possibleMoves.forEach((tile) => {
+
+            const svg = this.game.gameTiles[tile.x][tile.y];
+
+            if (((tile.y % 2) == 1 && (tile.x % 2) == 1) || ((tile.y % 2) == 0 && (tile.x % 2) == 0)) {
+
+                setAttributes(svg, { fill: this.cssVar.getPropertyValue("--colorSignal") })
+
+            } else {
+
+                setAttributes(svg, { fill: this.cssVar.getPropertyValue("--colorBoardDark") })
 
             }
 
@@ -153,6 +171,8 @@ export class gamePiece {
         setAttributes(this.svg, { x: this.pos.y * 100, y: this.pos.x * 100 })
 
     }
+
+
 
 }
 

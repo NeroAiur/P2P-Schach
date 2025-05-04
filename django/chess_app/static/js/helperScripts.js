@@ -1,5 +1,7 @@
 
+
 //Applies css styles "attrs" in form JSON to element "el".
+
 export function setAttributes(el, attrs) {
 
     Object.keys(attrs).forEach(key => el.setAttribute(key, attrs[key]));
@@ -7,6 +9,7 @@ export function setAttributes(el, attrs) {
 }
 
 //Creates and appends HTML element
+
 export function setUpHTML(type, attributes, parent) {
 
     let html = document.createElement(type);
@@ -18,6 +21,8 @@ export function setUpHTML(type, attributes, parent) {
     return (html)
 
 }
+
+
 
 export function setUpSVG(type, attributes, parent) {
 
@@ -31,6 +36,8 @@ export function setUpSVG(type, attributes, parent) {
 
 }
 
+
+
 export function cleanInput(input) {
 
     //do stuff
@@ -38,6 +45,8 @@ export function cleanInput(input) {
     return input
 
 }
+
+
 
 export async function hash(input) {
 
@@ -51,6 +60,8 @@ export async function hash(input) {
     return hashedInput
 
 }
+
+
 
 export function getCookie(name) {
 
@@ -81,13 +92,18 @@ export function getCookie(name) {
 
 }
 
+
+
 export function encodeRow(row){
 
     return String.fromCharCode(65 + row);
 
 }
 
+
+
 export function decodeRow(row){
 
     return (parseInt(row.charCodeAt(0)) - 65)
+    
 }
