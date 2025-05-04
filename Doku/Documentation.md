@@ -1,8 +1,8 @@
 ---
-title:
-author:
-date:
-version:
+title: STECH-Softwareprojekt Dokumentation
+author: Felix Jäckel, Sebastian Schöneich, Eric Malik Uecker, Benjamin Waschkowski, Paul Weibbrecht
+date: 04-05-2025
+version: 1.1
 ---
 # STECH-Projektarbeit
 Bearbeiter: Felix Jäckel, Sebastian Schöneich, Eric Malik Uecker, Benjamin Waschkowski, Paul Weibbrecht
