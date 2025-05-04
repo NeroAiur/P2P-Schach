@@ -1,24 +1,26 @@
 @font-face {
+
     font-family: "95";
     src:
-      url("./fonts/w95fa.woff2") format("woff2"),
-      url("./fonts/w95fa.woff") format("woff");
+        url("./fonts/w95fa.woff2") format("woff2"),
+        url("./fonts/w95fa.woff") format("woff");
     font-weight: normal;
     font-style: normal;
-}
-  
 
-:root{
-    --headerHeight: 150px;
-    --footerHeight: 100px;
-    --sidebarWidth: 200px;
-    --contentPadding: 20px;
+}
+
+
+:root {
+
+    --contentPadding: 15px;
     --doublePadding: calc(var(--contentPadding) * 2);
     --contentPaddingXL: 100px;
     --contentPaddingXXL: 150px;
-    --spacingMargin: 100px 250px 100px 250px;
-    --font-size: 36pt;
-    --font-family:"95", serif;
+    --spacingMargin: 75px 150px 75px 150px;
+
+    --font-size: 24pt;
+    --font-family: "95", serif;
+
     --colorMain: #200034;
     --colorAccent1: #56008c;
     --colorAccent2: #4c0050;
@@ -26,53 +28,67 @@
     --colorSignalHigh: #d8006c;
     --colorHighlight: #4800ff;
     --colorBoardDark: #500028;
-    --colorText1:#f2f2f2;
-    --colorText2:#797979;
+    --colorText1: #f2f2f2;
+    --colorText2: #797979;
     --colorBackground: #f2f2f2;
-    
-}
-html{
-    height: 100%;
-    width: 100%;
+
+    --dropShadow: drop-shadow(15px 15px rgba(170, 170, 170, 0.95));
+
 }
 
-body{
+html {
+
+    height: 100%;
+    width: 100%;
+
+}
+
+body {
+
     display: flex;
     align-items: stretch;
     justify-content: center;
 
     height: 100%;
     width: 100%;
+
     margin: 0px;
 
     font-family: var(--font-family);
     font-size: var(--font-size);
+
     color: var(--colorText1);
 
     background: url(../Chesspieces/SVG/Background.svg) center no-repeat fixed;
     background-size: cover;
+
 }
 
-p{
+p {
+
     height: fit-content;
     margin: 0px;
+
 }
-input{
+
+input {
 
     font-family: var(--font-family);
     font-size: var(--font-size);
 
 }
 
-input::placeholder{
+input::placeholder {
 
     font-family: var(--font-family);
     font-size: var(--font-size);
+
     color: var(--colorText2);
 
 }
 
-.wrapperXL{
+.wrapperXL {
+
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -80,12 +96,15 @@ input::placeholder{
 
     height: auto;
     width: 100%;
+
     margin: var(--spacingMargin);
 
     background: #111111;
+
 }
 
-.wrapperXLR{
+.wrapperXLR {
+
     display: flex;
     flex-direction: row;
     align-items: stretch;
@@ -93,21 +112,26 @@ input::placeholder{
 
     height: auto;
     width: 100%;
+
     margin: var(--spacingMargin);
+
 }
 
-.wrapperL{
+.wrapperL {
+
     display: flex;
     align-items: center;
-    align-self:stretch;
+    align-self: stretch;
     justify-content: start;
     flex-direction: column;
 
     height: auto;
     width: 100%;
+
 }
 
 .wrapperS {
+
     display: flex;
     align-items: stretch;
     justify-content: stretch;
@@ -117,8 +141,9 @@ input::placeholder{
 
 }
 
-.banner{
-    display:flex;
+.banner {
+
+    display: flex;
     align-items: center;
     flex-direction: row;
 
@@ -127,13 +152,16 @@ input::placeholder{
     padding: var(--contentPadding);
 
     background-color: var(--colorAccent1);
+
 }
 
-.hiddenInput{
+.hiddenInput {
+
     display: none
 }
 
-.loginForm{
+.loginForm {
+
     display: flex;
     align-self: center;
     flex-direction: column;
@@ -142,76 +170,101 @@ input::placeholder{
     width: 30%;
 
     background: var(--colorMain);
+
+    filter: var(--dropShadow);
+
 }
 
-.textInput{
+.textInput {
+
     height: 50px;
     width: auto;
+
     margin: var(--contentPadding);
+
 }
 
 .loginButton {
+
     align-self: center;
 
     height: auto;
     width: 50%;
+
     margin: var(--contentPadding);
+    padding: var(--contentPadding);
 
     color: var(--colorText1);
-
     background-color: var(--colorSignal);
-    
+
     border: none;
 }
 
-.loginButton:hover{
+.loginButton:hover {
+
     background-color: var(--colorSignalHigh);
+
 }
 
-.roomBrowser{
+.roomBrowser {
     display: flex;
     flex-direction: column;
     align-self: stretch;
 
     width: auto;
     height: 50%;
+
     margin: var(--contentPadding);
 
     background: var(--colorMain);
 
+    filter:var(--dropShadow);
+
 }
 
-.ranking{
+.ranking {
+
     display: flex;
     flex-direction: column;
     align-self: stretch;
 
     width: 100%;
     height: auto;
+
     margin: var(--contentPadding);
 
     background-color: var(--colorMain);
 
+    filter:var(--dropShadow);
+
 }
 
 .friendbar {
+
     height: auto;
     width: 30%;
+
     margin: var(--contentPadding);
 
-    background:var(--colorMain);
+    background: var(--colorMain);
+
+    filter:var(--dropShadow);
+
 }
 
 .createRoom {
-    margin-left: auto;
 
-    width: 300px;
+    width: auto;
     height: 100%;
+
+    margin-left: auto;
+    padding: var(--contentPadding);
 
     color: var(--colorText1);
     background-color: var(--colorSignal);
-    
-    border:none;
+
+    border: none;
+
 }
 
 
@@ -219,33 +272,42 @@ input::placeholder{
 
     width: 300px;
     height: auto;
+
     margin: var(--contentPadding) var(--contentPadding) var(--contentPadding) auto;
 
     color: var(--colorText1);
     background-color: var(--colorSignal);
-    
-    border:none;
+
+    border: none;
+
 }
 
-.createRoom:hover{
+.createRoom:hover {
+
     background-color: var(--colorSignalHigh);
+
 }
 
 .lobbyList {
-    height: auto;
-    width: auto;
-    margin: 0 0 var(--contentPadding) 0;
 
     overflow: auto;
-}
 
-.list{
     height: auto;
     width: auto;
 
-    align-self:stretch;
+    margin: 0 0 var(--contentPadding) 0;
+
+}
+
+.list {
+
+    align-self: stretch;
 
     overflow-y: scroll;
+
+    height: auto;
+    width: auto;
+
 }
 
 .lobbyCard {
@@ -255,68 +317,97 @@ input::placeholder{
 
     height: 150px;
     width: auto;
+
     margin: var(--contentPadding);
 
     background-color: var(--colorAccent2);
+
 }
 
 .lobbyText {
+
     height: auto;
     width: auto;
+
     margin: var(--contentPadding);
+
 }
 
 .rankingCard {
+
     height: 75px;
     width: auto;
-    margin:  var(--contentPadding);
+
+    margin: var(--contentPadding);
 
     background-color: var(--colorAccent2);
+
 }
 
 .gameBoard {
+
     align-self: stretch;
 
-    height:auto;
-    margin: var(--contentPadding)
+    height: auto;
+
+    margin: var(--contentPadding);
+
+    filter: var(--dropShadow);
+
 }
 
 .friendCard {
-    width:auto;
+
+    width: auto;
     height: 100px;
+
     padding: var(--contentPadding);
 
     background-color: var(--colorAccent2);
+
 }
 
 .gameInfo {
+
     height: auto;
     width: 0px;
+
     margin: var(--contentPadding);
 
     background: var(--colorMain);
+
+    filter: var(--dropShadow);
+
 }
 
 .textBox {
+
     display: flex;
-    height: fit-content;
-    width: auto;
     align-items: center;
     justify-content: center;
+
+    height: fit-content;
+    width: auto;
+
     margin: var(--contentPaddingXL);
+
 }
 
 .timer {
+
     display: flex;
-    height: fit-content;
-    width: auto;
     align-items: center;
     justify-content: center;
+
+    height: fit-content;
+    width: auto;
+
 }
 
-.boardLettering{
+.boardLettering {
+
     font-size: 12pt;
-    fill: var(--colorText1);
-    
-}
 
+    fill: var(--colorText1);
+
+}
