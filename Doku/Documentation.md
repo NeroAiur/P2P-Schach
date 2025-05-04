@@ -4,7 +4,7 @@ author: Felix Jäckel, Sebastian Schöneich, Eric Malik Uecker, Benjamin Waschko
 date: 04-05-2025
 version: 1.1
 ---
-# STECH-Projektarbeit
+# STECH-Projektarbeit - Dokumentation
 Bearbeiter: Felix Jäckel, Sebastian Schöneich, Eric Malik Uecker, Benjamin Waschkowski, Paul Weibbrecht
 Seminargruppe: 3MI23-1
 
